@@ -6,12 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.metaphore.bmfmetaedit.App;
-import com.metaphore.bmfmetaedit.mainscreen.MainResources;
+import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
+import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.view.preview.PreviewHolder;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 
 public class RootTable extends Table {
-    public RootTable(MainResources resources) {
+    public RootTable(MainScreenContext ctx) {
 
         BitmapFont.BitmapFontData fontData = App.inst().getModel().getFontDocument().getFont().getData();
         Array<GlyphModel> glyphs = new Array<>(fontData.glyphs[0].length);
@@ -27,13 +28,12 @@ public class RootTable extends Table {
             }
         }
 
-        GlyphGrid glyphGrid = new GlyphGrid(resources, glyphs);
+        GlyphGrid glyphGrid = new GlyphGrid(ctx, glyphs);
         ScrollPane glyphListScroller = new ScrollPane(glyphGrid);
         glyphListScroller.setScrollingDisabled(true, false);
+        glyphListScroller.addListener(new CaptureScrollOnHover(glyphListScroller));
 
-        PreviewHolder previewHolder = new PreviewHolder(resources);
-//        PreviewCanvas previewCanvas = new PreviewCanvas(resources);
-//        ScrollPane previewScroller = new ScrollPane(previewCanvas);
+        PreviewHolder previewHolder = new PreviewHolder(ctx);
 
         add(glyphListScroller).expandY().fillY().align(Align.topLeft).padLeft(4f).padRight(4f).width(400f);
         add(previewHolder).expand().fill();

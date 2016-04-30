@@ -3,24 +3,28 @@ package com.metaphore.bmfmetaedit.mainscreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.crashinvaders.common.eventmanager.EventManager;
 import com.crashinvaders.common.scene2d.StageX;
 import com.crashinvaders.screenmanager.BaseScreen;
 import com.crashinvaders.screenmanager.Bundle;
 import com.metaphore.bmfmetaedit.App;
+import com.metaphore.bmfmetaedit.mainscreen.selection.GlyphSelectionManager;
 import com.metaphore.bmfmetaedit.mainscreen.view.RootTable;
 
-public class MainScreen extends BaseScreen {
+public class MainScreen extends BaseScreen implements MainScreenContext {
 
     private final MainResources resources;
     private final StageX stage;
+    private final GlyphSelectionManager selectionManager;
 
     public MainScreen() {
         resources = new MainResources(App.inst().getAssets());
         stage = new StageX(new ScreenViewport());
+        selectionManager = new GlyphSelectionManager(App.inst().getEvents());
 
         // Root table
         {
-            RootTable rootTable = new RootTable(resources);
+            RootTable rootTable = new RootTable(this);
             rootTable.setFillParent(true);
             stage.addActor(rootTable);
         }
@@ -59,4 +63,21 @@ public class MainScreen extends BaseScreen {
         stage.dispose();
         resources.dispose();
     }
+
+    //region MainScreenContext implementation
+    @Override
+    public GlyphSelectionManager getSelectionManager() {
+        return selectionManager;
+    }
+
+    @Override
+    public MainResources getResources() {
+        return resources;
+    }
+
+    @Override
+    public EventManager getEvents() {
+        return App.inst().getEvents();
+    }
+//endregion
 }

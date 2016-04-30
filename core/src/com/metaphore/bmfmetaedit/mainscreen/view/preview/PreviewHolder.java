@@ -5,21 +5,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.metaphore.bmfmetaedit.mainscreen.MainResources;
+import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
+import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 
 public class PreviewHolder extends WidgetGroup {
 
     private final Texture background;
+    private final PreviewCanvas previewCanvas;
     private float bgScale = 64f;
 
-    public PreviewHolder(MainResources resources) {
-        PreviewCanvas previewCanvas = new PreviewCanvas(resources);
+    public PreviewHolder(MainScreenContext ctx) {
+        this.previewCanvas = new PreviewCanvas(ctx);
+        PreviewCanvas previewCanvas = this.previewCanvas;
         addActor(previewCanvas);
 
         addListener(new DragInputListener(previewCanvas));
+        addListener(new ScaleInputHandler(this));
         setTouchable(Touchable.enabled);
 
-        background = resources.assets.get("textures/page_canvas_bg_checker.png");
+        background = ctx.getResources().assets.get("textures/page_canvas_bg_checker.png");
         background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
@@ -27,29 +31,32 @@ public class PreviewHolder extends WidgetGroup {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(Color.WHITE);
-        batch.draw(background, getX(), getY(), getWidth(), getHeight(), 0f, 0f, getWidth()/background.getWidth()/bgScale, getHeight()/background.getHeight()/bgScale);
+        batch.draw(background, getX(), getY(), getWidth(), getHeight(), 0f, 0f,
+                getWidth()/background.getWidth()/bgScale/getScaleY(), getHeight()/background.getHeight()/bgScale/getScaleX());
         super.draw(batch, parentAlpha);
     }
 
     @Override
     protected void drawChildren(Batch batch, float parentAlpha) {
         batch.flush();
-        clipBegin(0f, 0f, getWidth(), getHeight());
+        clipBegin(0f, 0f, getWidth()/getScaleX(), getHeight()/getScaleY());
         super.drawChildren(batch, parentAlpha);
         batch.flush();
         clipEnd();
     }
 
     private static class DragInputListener extends InputListener {
-        private final Actor actor;
+        private final Actor target;
         private float lastX, lastY;
 
-        public DragInputListener(Actor actor) {
-            this.actor = actor;
+        public DragInputListener(Actor target) {
+            this.target = target;
         }
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (button != 1) return false;
+
             lastX = x;
             lastY = y;
             return true;
@@ -59,10 +66,24 @@ public class PreviewHolder extends WidgetGroup {
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
             float xDif = x - lastX;
             float yDif = y - lastY;
-            actor.moveBy(xDif, yDif);
+            target.moveBy(xDif, yDif);
 
             lastX = x;
             lastY = y;
+        }
+    }
+
+    private static class ScaleInputHandler extends CaptureScrollOnHover {
+
+        public ScaleInputHandler(Actor target) {
+            super(target);
+        }
+
+        @Override
+        public boolean scrolled(InputEvent event, float x, float y, int amount) {
+            float scaleFactor = amount < 0 ? 0.9f : 1.1f;
+            target.setScale(target.getScaleX() * scaleFactor);
+            return true;
         }
     }
 }

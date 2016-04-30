@@ -19,6 +19,14 @@ glyph_li_bg_hover
   orig: 31, 31
   offset: 0, 0
   index: -1
+glyph_li_bg_selected
+  rotate: false
+  xy: 67, 6
+  size: 31, 31
+  split: 15, 15, 15, 15
+  orig: 31, 31
+  offset: 0, 0
+  index: -1
 glyph_preview_border
   rotate: false
   xy: 1, 1

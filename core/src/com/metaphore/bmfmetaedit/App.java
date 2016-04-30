@@ -3,17 +3,17 @@ package com.metaphore.bmfmetaedit;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
+import com.crashinvaders.common.eventmanager.EventManager;
 import com.crashinvaders.screenmanager.StackScreenManager;
 import com.metaphore.bmfmetaedit.loadscreen.LoadScreen;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreen;
 import com.metaphore.bmfmetaedit.model.Model;
-import com.squareup.otto.Bus;
 
 public class App extends StackScreenManager implements LoadScreen.Listener {
     private static App instance;
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
-    private final Bus bus = new Bus("App");
-    private final Model model = new Model(bus);
+    private final EventManager eventManager = new EventManager();
+    private final Model model = new Model(eventManager);
     private AssetManager assets;
 
     public static App inst() {
@@ -56,8 +56,8 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
         return inputMultiplexer;
     }
 
-    public Bus getBus() {
-        return bus;
+    public EventManager getEvents() {
+        return eventManager;
     }
 
     public AssetManager getAssets() {

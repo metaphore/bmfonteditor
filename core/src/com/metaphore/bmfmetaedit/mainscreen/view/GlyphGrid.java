@@ -1,28 +1,72 @@
 package com.metaphore.bmfmetaedit.mainscreen.view;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.metaphore.bmfmetaedit.mainscreen.MainResources;
+import com.crashinvaders.common.eventmanager.EventHandler;
+import com.crashinvaders.common.eventmanager.EventInfo;
+import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
+import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
+import java.util.HashMap;
+import java.util.Map;
 
-public class GlyphGrid extends VerticalGroup {
+public class GlyphGrid extends VerticalGroup implements EventHandler {
 //    public static final int COLUMNS = 4;
     public static final float SPACE_X = 4f;
 //    public static final float SPACE_Y = 4f;
 
+    private final MainScreenContext ctx;
     private final Array<GlyphItem> glyphItems;
+    private final Map<GlyphModel, GlyphItem> glyphMap;
 
     private boolean rearrangeRequired = true;
 
-    public GlyphGrid(MainResources resources, Array<GlyphModel> glyphs) {
+    public GlyphGrid(MainScreenContext ctx, Array<GlyphModel> glyphs) {
+        this.ctx = ctx;
         setTransform(false);
 
         glyphItems = new Array<>(glyphs.size);
+        glyphMap = new HashMap<>();
         for (int i = 0; i < glyphs.size; i++) {
-            GlyphModel glyph = glyphs.get(i);
-            GlyphItem glyphItem = new GlyphItem(resources, glyph);
+            GlyphModel model = glyphs.get(i);
+            GlyphItem glyphItem = new GlyphItem(ctx.getResources(), model);
+            glyphItem.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    ctx.getSelectionManager().setSelectedGlyph(model);
+                }
+            });
             glyphItems.add(glyphItem);
+            glyphMap.put(model, glyphItem);
+        }
+    }
+
+    @Override
+    protected void setStage(Stage stage) {
+        super.setStage(stage);
+
+        if (stage != null) {
+            ctx.getEvents().addHandler(this,
+                    GlyphSelectionChangedEvent.class);
+        } else {
+            ctx.getEvents().removeHandler(this);
+        }
+    }
+
+    @Override
+    public void handle(EventInfo event) {
+        if (event instanceof GlyphSelectionChangedEvent) {
+            GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
+
+            for (int i = 0; i < glyphItems.size; i++) {
+                GlyphItem glyphItem = glyphItems.get(i);
+                boolean selected = glyphItem.getModel() == e.getSelectedGlyph();
+                glyphItem.setSelected(selected);
+            }
         }
     }
 

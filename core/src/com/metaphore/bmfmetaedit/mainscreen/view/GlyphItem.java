@@ -20,8 +20,11 @@ public class GlyphItem extends Table {
 
     private final BgDrawable bgDrawable;
     private final ClickListener clickListener;
+    private final GlyphModel model;
+    private boolean selected;
 
     public GlyphItem(MainResources resources, GlyphModel model) {
+        this.model = model;
         setBackground(bgDrawable = new BgDrawable(resources.atlas));
         addListener(clickListener = new ClickListener());
         setTouchable(Touchable.enabled);
@@ -49,13 +52,23 @@ public class GlyphItem extends Table {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if (clickListener.isOver()) {
+        if (selected) {
+            bgDrawable.setState(BgDrawable.State.SELECTED);
+        } else if (clickListener.isOver()) {
             bgDrawable.setState(BgDrawable.State.HOVER);
         } else {
             bgDrawable.setState(BgDrawable.State.REGULAR);
         }
 
         super.draw(batch, parentAlpha);
+    }
+
+    public GlyphModel getModel() {
+        return model;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     private static class GlyphPreview extends Widget {
@@ -130,13 +143,13 @@ public class GlyphItem extends Table {
 
     private static class BgDrawable extends BaseDrawable {
 
-        private final NinePatch regular;
-        private final NinePatch hover;
+        private final NinePatch regular, hover, selected;
         private State state = State.REGULAR;
 
         public BgDrawable(TextureAtlas atlas) {
             regular = atlas.createPatch("glyph_li_bg");
             hover = atlas.createPatch("glyph_li_bg_hover");
+            selected = atlas.createPatch("glyph_li_bg_selected");
         }
 
         public void setState(State state) {
@@ -147,6 +160,9 @@ public class GlyphItem extends Table {
         public void draw(Batch batch, float x, float y, float width, float height) {
             NinePatch patch;
             switch (state) {
+                case SELECTED:
+                    patch = selected;
+                    break;
                 case HOVER:
                     patch = hover;
                     break;
@@ -158,7 +174,7 @@ public class GlyphItem extends Table {
         }
 
         public enum State {
-            REGULAR, HOVER
+            REGULAR, HOVER, SELECTED
         }
     }
 }

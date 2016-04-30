@@ -1,15 +1,15 @@
 package com.metaphore.bmfmetaedit.model;
 
 import com.badlogic.gdx.Gdx;
-import com.squareup.otto.Bus;
+import com.crashinvaders.common.eventmanager.EventManager;
 
 public class Model {
 
-    private final Bus bus;
+    private final EventManager eventManager;
     private FontDocument fontDocument;
 
-    public Model(Bus bus) {
-        this.bus = bus;
+    public Model(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     public void initTestDocument() {
