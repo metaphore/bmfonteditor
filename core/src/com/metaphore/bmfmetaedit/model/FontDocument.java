@@ -6,14 +6,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.metaphore.bmfmetaedit.App;
 
 import java.io.File;
 
 public class FontDocument {
     private final BitmapFont font;
+    private final Array<GlyphModel> glyphs;
 
     public FontDocument(BitmapFont font) {
         this.font = font;
+
+        glyphs = new Array<>(1024);
+        for (BitmapFont.Glyph[] glyphChunk : font.getData().glyphs) {
+            if (glyphChunk == null) continue;
+            for (BitmapFont.Glyph glyph : glyphChunk) {
+                if (glyph == null) continue;
+
+                GlyphModel glyphModel = GlyphUtils.toGlyphModel(new GlyphModel(), glyph);
+                glyphs.add(glyphModel);
+            }
+        }
     }
 
     public void dispose() {
@@ -24,10 +37,12 @@ public class FontDocument {
         return font;
     }
 
+    public Array<GlyphModel> getGlyphs() {
+        return glyphs;
+    }
+
     //region Factory methods
     public static FontDocument createFromFont(File file) {
-//        InternalFileHandleResolver fileHandleResolver = new InternalFileHandleResolver();
-//        BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData(Gdx.files.internal("test/nokia8.fnt"), false);
         FileHandle fileHandle = Gdx.files.absolute(file.getAbsolutePath());
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData(fileHandle, false);
         int pages = data.getImagePaths().length;

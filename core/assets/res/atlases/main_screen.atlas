@@ -41,11 +41,42 @@ split_pane_drawer_dots
   orig: 4, 24
   offset: 0, 0
   index: -1
+edit_panel_bg
+  rotate: false
+  xy: 7, 24
+  size: 13, 6
+  split: 6, 6, 5, 0
+  orig: 13, 6
+  offset: 0, 0
+  index: -1
 glyph_preview_border
   rotate: false
   xy: 1, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
+  offset: 0, 0
+  index: -1
+input_field_bg
+  rotate: false
+  xy: 1, 1
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+text_cursor
+  rotate: false
+  xy: 118, 57
+  size: 3, 6
+  split: 0, 3, 3, 2
+  orig: 3, 6
+  offset: 0, 0
+  index: -1
+text_selection
+  rotate: false
+  xy: 7, 21
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1

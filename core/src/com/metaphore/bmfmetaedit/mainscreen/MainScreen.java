@@ -2,9 +2,9 @@ package com.metaphore.bmfmetaedit.mainscreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.crashinvaders.common.eventmanager.EventManager;
-import com.crashinvaders.common.scene2d.StageX;
 import com.crashinvaders.screenmanager.BaseScreen;
 import com.crashinvaders.screenmanager.Bundle;
 import com.metaphore.bmfmetaedit.App;
@@ -14,12 +14,12 @@ import com.metaphore.bmfmetaedit.mainscreen.view.RootTable;
 public class MainScreen extends BaseScreen implements MainScreenContext {
 
     private final MainResources resources;
-    private final StageX stage;
+    private final Stage stage;
     private final GlyphSelectionManager selectionManager;
 
     public MainScreen() {
         resources = new MainResources(App.inst().getAssets());
-        stage = new StageX(new ScreenViewport());
+        stage = new Stage(new ScreenViewport());
         selectionManager = new GlyphSelectionManager(App.inst().getEvents());
 
         // Root table
@@ -78,6 +78,11 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
     @Override
     public EventManager getEvents() {
         return App.inst().getEvents();
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
     }
 //endregion
 }

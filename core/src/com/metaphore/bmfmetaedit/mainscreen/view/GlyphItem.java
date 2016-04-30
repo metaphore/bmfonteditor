@@ -29,12 +29,7 @@ public class GlyphItem extends Table {
         addListener(clickListener = new ClickListener());
         setTouchable(Touchable.enabled);
 
-        String hexValue = Integer.toHexString(model.code).toUpperCase();
-        while (hexValue.length() < 4) {
-            hexValue = 0 + hexValue;
-        }
-
-        Label lblHex = new Label("U+"+hexValue, new Label.LabelStyle(resources.font, Color.WHITE));
+        Label lblHex = new Label(model.hex, new Label.LabelStyle(resources.font, Color.WHITE));
         Label lblDec = new Label("#"+model.code, new Label.LabelStyle(resources.font, Color.WHITE));
         GlyphPreview glyphPreview = new GlyphPreview(resources, model);
         Container previewContainer = new Container<>(glyphPreview);

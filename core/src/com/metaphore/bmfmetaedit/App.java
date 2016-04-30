@@ -4,7 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.PauseManager;
 import com.crashinvaders.common.PrioritizedInputMultiplexer;
 import com.crashinvaders.common.eventmanager.EventManager;
@@ -127,6 +126,14 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
     public PauseManager getPauseManager() {
         return pauseManager;
     }
+
+    public void fileChoose(FileChooserParams params, FileChooserListener listener) {
+        GlobalSuspendEvent.dispatchHold();
+        actionResolver.fileChooser(params, (success, fileHandle) -> {
+            GlobalSuspendEvent.dispatchRelease();
+            listener.onResult(success, fileHandle);
+        });
+    }
     //endregion
 
     private class GlobalInputHandler extends InputAdapter {
@@ -141,20 +148,12 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
                     GlobalSuspendEvent.dispatchRelease();
                     return true;
                 }
-                case Keys.Q: {
-                    actionResolver.fileChooser(new FileChooserParams().save().extensions("png", "fnt"), new FileChooserListener() {
-                        @Override
-                        public void onSuccess(FileHandle fileHandle) {
-                            System.out.println();
-                        }
-
-                        @Override
-                        public void onCanceled() {
-                            System.out.println();
-                        }
-                    });
-                    return true;
-                }
+//                case Keys.Q: {
+//                    fileChoose(new FileChooserParams().save().title("Save").extensions("png", "fnt"), (success, fileHandle) -> {
+//                        System.out.println("File selected " + fileHandle);
+//                    });
+//                    return true;
+//                }
                 case Keys.S: {
                     if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
                         model.saveDocument();

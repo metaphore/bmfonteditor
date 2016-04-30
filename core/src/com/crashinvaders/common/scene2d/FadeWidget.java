@@ -51,7 +51,7 @@ public class FadeWidget extends Widget {
         sequence.addAction(Actions.run(new Runnable() {
             @Override
             public void run() {
-                ((StageX) getStage()).removeKeyboardFocus(FadeWidget.this);
+                getStage().setKeyboardFocus(null);
                 if (action != null) {
                     Gdx.app.postRunnable(action);
                 }
@@ -65,18 +65,17 @@ public class FadeWidget extends Widget {
     @Override
     protected void setStage(Stage stage) {
         super.setStage(stage);
-        StageX stageX = (StageX) stage;
 
         if (blockInput) {
-            if (stageX != null) {
-                stageX.addKeyboardFocus(this);
+            if (stage != null) {
+                stage.setKeyboardFocus(this);
             } else {
 //                stageX.removeKeyboardFocus(this);
             }
         }
 
         // Manage texture
-        if (stageX != null) {
+        if (stage != null) {
             Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
             pixmap.setColor(Color.WHITE);
             pixmap.drawPixel(0, 0);

@@ -11,17 +11,17 @@ import com.metaphore.bmfmetaedit.model.FontDocument;
 
 public class PreviewCanvas extends Group {
 
-    private final TextureRegion region;
-
     public PreviewCanvas(MainScreenContext ctx) {
         FontDocument fontDocument = App.inst().getModel().getFontDocument();
-        region = fontDocument.getFont().getRegion();
+        TextureRegion region = fontDocument.getFont().getRegion();
         setSize(region.getRegionWidth(), region.getRegionHeight());
 
         Image fontPage = new Image(region);
         addActor(fontPage);
 
         addActor(new SelectionOverlay(ctx));
+
+        addActor(new BBClickSelectionOverlay(ctx));
     }
 
     @Override

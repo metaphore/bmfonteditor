@@ -73,11 +73,6 @@ public class ModalHolder<T extends Actor> extends Container<T> {
             throw new IllegalStateException("Content is not set");
         }
 
-        // Keyboard focus on attached to stage
-        if (stage != null) {
-            ((StageX)stage).addKeyboardFocus(this);
-        }
-
         if (stage != null) {
             if (lifecycleListener != null) {
                 lifecycleListener.onShowing(this);
@@ -98,8 +93,10 @@ public class ModalHolder<T extends Actor> extends Container<T> {
             }
         }
 
+        // Keyboard focus on attached to stage
         if (consumeInput) {
             if (stage != null) {
+                stage.setKeyboardFocus(this);
                 stage.setScrollFocus(this);
             }
         }
@@ -130,8 +127,8 @@ public class ModalHolder<T extends Actor> extends Container<T> {
             lifecycleListener.onDismissing(this);
         }
 
-        StageX stage = (StageX) getStage();
-        stage.removeKeyboardFocus(this);
+        Stage stage = getStage();
+        stage.setKeyboardFocus(null);
         stage.setScrollFocus(null);
 
         setTouchable(Touchable.disabled);

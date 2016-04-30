@@ -1,27 +1,24 @@
 package com.metaphore.bmfmetaedit.overlayscene;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
-import com.crashinvaders.common.scene2d.StageX;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.overlayscene.events.GlobalSuspendEvent;
 
 public class OverlayScene implements EventHandler {
 
     public static final String PAUSE_KEY = "overlay_scene";
-    private final StageX stage;
+    private final Stage stage;
     private final AssetManager assets;
 
     private SuspendActor suspendActor;
 
     public OverlayScene(AssetManager assets) {
         this.assets = assets;
-        stage = new StageX(new ScreenViewport());
+        stage = new Stage(new ScreenViewport());
 //        stage.setDebugAll(true);
         App.inst().getInput().addProcessor(stage, Integer.MIN_VALUE+1);
         App.inst().getEvents().addHandler(this, GlobalSuspendEvent.class);

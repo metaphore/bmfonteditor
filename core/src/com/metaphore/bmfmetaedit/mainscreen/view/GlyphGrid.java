@@ -1,13 +1,18 @@
 package com.metaphore.bmfmetaedit.mainscreen.view;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
+import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
@@ -15,20 +20,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GlyphGrid extends VerticalGroup implements EventHandler {
-//    public static final int COLUMNS = 4;
+    private static final Vector2 TMP_VEC2 = new Vector2();
     public static final float SPACE_X = 4f;
-//    public static final float SPACE_Y = 4f;
 
     private final MainScreenContext ctx;
     private final Array<GlyphItem> glyphItems;
     private final Map<GlyphModel, GlyphItem> glyphMap;
 
     private boolean rearrangeRequired = true;
+    private ScrollPane parenScrollPane;
 
-    public GlyphGrid(MainScreenContext ctx, Array<GlyphModel> glyphs) {
+    public GlyphGrid(MainScreenContext ctx) {
         this.ctx = ctx;
         setTransform(false);
 
+        // Generate items
+        Array<GlyphModel> glyphs = App.inst().getModel().getFontDocument().getGlyphs();
         glyphItems = new Array<>(glyphs.size);
         glyphMap = new HashMap<>();
         for (int i = 0; i < glyphs.size; i++) {
@@ -43,6 +50,10 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
             glyphItems.add(glyphItem);
             glyphMap.put(model, glyphItem);
         }
+    }
+
+    public void setParenScrollPane(ScrollPane parenScrollPane) {
+        this.parenScrollPane = parenScrollPane;
     }
 
     @Override
@@ -62,10 +73,18 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         if (event instanceof GlyphSelectionChangedEvent) {
             GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
 
+            GlyphItem lastSelected = null;
             for (int i = 0; i < glyphItems.size; i++) {
                 GlyphItem glyphItem = glyphItems.get(i);
                 boolean selected = glyphItem.getModel() == e.getSelectedGlyph();
                 glyphItem.setSelected(selected);
+
+                if (selected) lastSelected = glyphItem;
+            }
+            if (lastSelected != null && parenScrollPane != null) {
+                Vector2 scrollPos = lastSelected.localToAscendantCoordinates(this, TMP_VEC2.set(0f, 0f));
+                parenScrollPane.scrollTo(scrollPos.x, scrollPos.y,
+                        lastSelected.getWidth(), lastSelected.getHeight(), false, true);
             }
         }
     }
@@ -81,6 +100,8 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         if (rearrangeRequired) {
             rearrangeRequired = false;
             float width = getWidth();
+
+            // Optimize rows with pools
 
             int idx = 0;
             int idxInRow = 0;
