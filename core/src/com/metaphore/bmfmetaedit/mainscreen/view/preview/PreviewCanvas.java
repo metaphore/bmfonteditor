@@ -3,13 +3,13 @@ package com.metaphore.bmfmetaedit.mainscreen.view.preview;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.metaphore.bmfmetaedit.App;
-import com.metaphore.bmfmetaedit.mainscreen.MainResources;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.model.FontDocument;
 
-public class PreviewCanvas extends Actor {
+public class PreviewCanvas extends Group {
 
     private final TextureRegion region;
 
@@ -17,16 +17,24 @@ public class PreviewCanvas extends Actor {
         FontDocument fontDocument = App.inst().getModel().getFontDocument();
         region = fontDocument.getFont().getRegion();
         setSize(region.getRegionWidth(), region.getRegionHeight());
+
+        Image fontPage = new Image(region);
+        addActor(fontPage);
+
+        addActor(new SelectionOverlay(ctx));
     }
 
     @Override
-    protected void sizeChanged() {
-        setOrigin(Align.center);
+    public void addActor(Actor actor) {
+        super.addActor(actor);
+        if (actor instanceof Overlay) {
+            Overlay overlay = (Overlay) actor;
+            overlay.setBounds(0f, 0f, getWidth(), getHeight());
+        }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(getColor());
-        batch.draw(region, getX(), getY(), getWidth(), getHeight());
+        super.draw(batch, parentAlpha);
     }
 }

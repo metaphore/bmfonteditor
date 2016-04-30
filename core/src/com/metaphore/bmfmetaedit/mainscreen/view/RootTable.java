@@ -24,6 +24,13 @@ public class RootTable extends Table {
                 GlyphModel glyphModel = new GlyphModel();
                 glyphModel.name = "#" + glyph.id;
                 glyphModel.code = glyph.id;
+                glyphModel.x = glyph.srcX;
+                glyphModel.y = glyph.srcY;
+                glyphModel.width = glyph.width;
+                glyphModel.height = glyph.height;
+                glyphModel.xoffset = glyph.xoffset;
+                glyphModel.yoffset = glyph.yoffset;
+                glyphModel.xadvance = glyph.xadvance;
                 glyphs.add(glyphModel);
             }
         }

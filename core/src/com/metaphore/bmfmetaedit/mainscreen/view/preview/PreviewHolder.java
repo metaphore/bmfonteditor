@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.utils.Align;
 import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 
@@ -45,6 +46,17 @@ public class PreviewHolder extends WidgetGroup {
         clipEnd();
     }
 
+    @Override
+    public Actor hit(float x, float y, boolean touchable) {
+        float left = 0f;
+        float right = left + getWidth();
+        float bot = 0f;
+        float top = bot + getHeight();
+        if (x < left || x > right || y < bot || y > top) return null;
+
+        return super.hit(x, y, touchable);
+    }
+
     private static class DragInputListener extends InputListener {
         private final Actor target;
         private float lastX, lastY;
@@ -81,7 +93,7 @@ public class PreviewHolder extends WidgetGroup {
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            float scaleFactor = amount < 0 ? 0.9f : 1.1f;
+            float scaleFactor = amount > 0 ? 0.9f : 1.1f;
             target.setScale(target.getScaleX() * scaleFactor);
             return true;
         }
