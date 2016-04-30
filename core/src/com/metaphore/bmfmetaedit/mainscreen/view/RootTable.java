@@ -1,12 +1,19 @@
 package com.metaphore.bmfmetaedit.mainscreen.view;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
+import com.metaphore.bmfmetaedit.mainscreen.MainResources;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.view.preview.PreviewHolder;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
@@ -42,7 +49,32 @@ public class RootTable extends Table {
 
         PreviewHolder previewHolder = new PreviewHolder(ctx);
 
-        add(glyphListScroller).expandY().fillY().align(Align.topLeft).padLeft(4f).padRight(4f).width(400f);
-        add(previewHolder).expand().fill();
+        SplitPane splitPane = new SplitPane(glyphListScroller, previewHolder, false, new SplitPane.SplitPaneStyle(
+                new SplitPaneDrawable(ctx.getResources().atlas)
+        ));
+
+        add(splitPane).fill().expand(true, true);
+//        add(glyphListScroller).expandY().fillY().align(Align.topLeft).padLeft(4f).padRight(4f).width(400f);
+//        add(previewHolder).expand().fill();
+    }
+
+    private static class SplitPaneDrawable extends BaseDrawable {
+
+        private final TextureAtlas.AtlasRegion fill;
+        private final TextureAtlas.AtlasRegion handle;
+
+        public SplitPaneDrawable(TextureAtlas atlas) {
+            fill = atlas.findRegion("split_pane_drawer_bg");
+            handle = atlas.findRegion("split_pane_drawer_dots");
+
+            setMinWidth(16f);
+            setMinHeight(32f);
+        }
+
+        @Override
+        public void draw(Batch batch, float x, float y, float width, float height) {
+            batch.draw(fill, x, y, width, height);
+            batch.draw(handle, x + (width-handle.getRegionWidth())*0.5f, y + (height-handle.getRegionHeight())*0.5f);
+        }
     }
 }

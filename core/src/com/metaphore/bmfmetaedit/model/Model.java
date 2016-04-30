@@ -1,6 +1,7 @@
 package com.metaphore.bmfmetaedit.model;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.tools.bmfont.BitmapFontWriter;
 import com.crashinvaders.common.eventmanager.EventManager;
 
 public class Model {
@@ -18,5 +19,11 @@ public class Model {
 
     public FontDocument getFontDocument() {
         return fontDocument;
+    }
+
+    public void saveDocument() {
+        if (fontDocument == null) return;
+
+        BitmapFontWriter.writeFont(fontDocument.getFont().getData(), new String[]{"nokia8.png"}, Gdx.files.absolute("d:/out.fnt"), new BitmapFontWriter.FontInfo("nokia8", 8), 512, 512);
     }
 }

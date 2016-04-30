@@ -46,7 +46,7 @@ public class SelectionOverlay extends Actor implements Overlay, EventHandler {
     public void draw(Batch batch, float parentAlpha) {
         if (selectedGlyphs.size == 0) return;
 
-        batch.flush();
+        batch.end();
         ShapeRenderer shaper = ctx.getResources().shapeRenderer;
         shaper.setProjectionMatrix(batch.getProjectionMatrix());
         shaper.setTransformMatrix(batch.getTransformMatrix());
@@ -57,5 +57,6 @@ public class SelectionOverlay extends Actor implements Overlay, EventHandler {
             shaper.rect(glyph.x, getHeight() - glyph.y - glyph.height, glyph.width, glyph.height);
         }
         shaper.end();
+        batch.begin();
     }
 }

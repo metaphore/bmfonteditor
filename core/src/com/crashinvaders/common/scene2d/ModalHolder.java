@@ -97,6 +97,12 @@ public class ModalHolder<T extends Actor> extends Container<T> {
                 dimDrawable = null;
             }
         }
+
+        if (consumeInput) {
+            if (stage != null) {
+                stage.setScrollFocus(this);
+            }
+        }
     }
 
     @Override
@@ -124,7 +130,9 @@ public class ModalHolder<T extends Actor> extends Container<T> {
             lifecycleListener.onDismissing(this);
         }
 
-        ((StageX)getStage()).removeKeyboardFocus(this);
+        StageX stage = (StageX) getStage();
+        stage.removeKeyboardFocus(this);
+        stage.setScrollFocus(null);
 
         setTouchable(Touchable.disabled);
         performDisappearAnimation();
@@ -275,6 +283,7 @@ public class ModalHolder<T extends Actor> extends Container<T> {
     }
 
     private class InputHandler extends InputListener {
+
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (event.isHandled()) return false;
@@ -304,6 +313,10 @@ public class ModalHolder<T extends Actor> extends Container<T> {
             if (cancelable && !cancelDismissInputTimer.isRunning()) {
                 dismiss();
             }
+            return consumeInput;
+        }
+        @Override
+        public boolean scrolled(InputEvent event, float x, float y, int amount) {
             return consumeInput;
         }
     }

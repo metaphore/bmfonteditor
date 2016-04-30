@@ -45,7 +45,7 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
 
     @Override
     public void show(Bundle bundle) {
-        App.inst().getInput().addProcessor(stage);
+        App.inst().getInput().addProcessor(stage, 0);
     }
 
     @Override
