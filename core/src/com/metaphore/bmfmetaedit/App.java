@@ -155,12 +155,12 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
                     GlobalSuspendEvent.dispatchRelease();
                     return true;
                 }
-                case Keys.Q: {
-                    fileChoose(new FileChooserParams().save().title("Save").extensions("png", "fnt"), (success, fileHandle) -> {
-                        System.out.println("File selected " + fileHandle);
-                    });
-                    return true;
-                }
+//                case Keys.Q: {
+//                    fileChoose(new FileChooserParams().save().title("Save").extensions("png", "fnt"), (success, fileHandle) -> {
+//                        System.out.println("File selected " + fileHandle);
+//                    });
+//                    return true;
+//                }
                 case Keys.S: {
                     if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
                         model.saveDocument();

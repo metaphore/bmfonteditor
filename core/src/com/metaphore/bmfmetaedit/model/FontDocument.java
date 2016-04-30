@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.eventmanager.EventManager;
-import com.metaphore.bmfmetaedit.App;
-import com.metaphore.bmfmetaedit.model.events.GlyphDataChangedEvent;
+import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
 
 import java.io.File;
 
@@ -89,7 +88,7 @@ public class FontDocument {
         GlyphUtils.fromGlyphModel(glyphModel, glyph);
         GlyphUtils.toGlyphModel(glyphModel, glyph);
         if (eventManager != null) {
-            eventManager.dispatchEvent(new GlyphDataChangedEvent(glyphModel));
+            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.UPDATED));
         }
     }
 
@@ -103,9 +102,10 @@ public class FontDocument {
     }
 
     private BitmapFont.Glyph[] ensureChunkExists(int chunkIndex) {
-        BitmapFont.Glyph[] chunk = font.getData().glyphs[chunkIndex];;
+        BitmapFont.Glyph[] chunk = font.getData().glyphs[chunkIndex];
         if (chunk == null) {
             chunk = new BitmapFont.Glyph[CHUNK_SIZE];
+            font.getData().glyphs[chunkIndex] = chunk;
         }
         return chunk;
     }
@@ -131,6 +131,45 @@ public class FontDocument {
         bitmapFont.setOwnsTexture(true);
 
         return new FontDocument(bitmapFont);
+    }
+
+    public GlyphModel createGlyph(int code) {
+        int chunkIdx = code / CHUNK_SIZE;
+        int glyphIdx = code % CHUNK_SIZE;
+        BitmapFont.Glyph[] chunk = ensureChunkExists(chunkIdx);
+
+        // Check if glyph is not exists yet
+        BitmapFont.Glyph glyph = chunk[glyphIdx];
+        if (glyph != null) {
+            Gdx.app.error("FontDocument", "Glyph with code: " + code + " already exists");
+            return null;
+        }
+
+        glyph =  new BitmapFont.Glyph();
+        glyph.id = code;
+        chunk[glyphIdx] = glyph;
+
+        GlyphModel glyphModel = GlyphUtils.toGlyphModel(new GlyphModel(glyph), glyph);
+        glyphs.add(glyphModel);
+
+        if (eventManager != null) {
+            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.CREATED));
+        }
+        return glyphModel;
+    }
+
+    public void deleteGlyph(GlyphModel glyphModel) {
+        boolean result = glyphs.removeValue(glyphModel, true);
+        if (!result) {
+            throw new IllegalArgumentException("Glyph is not exists: " + glyphModel.code);
+        }
+
+        // Remove from array
+        ensureChunkExists(glyphModel.code / CHUNK_SIZE)[glyphModel.code % CHUNK_SIZE] = null;
+
+        if (eventManager != null) {
+            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.REMOVED));
+        }
     }
     //endregion
 }

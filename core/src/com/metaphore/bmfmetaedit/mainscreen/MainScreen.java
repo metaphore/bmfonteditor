@@ -20,6 +20,7 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
     public MainScreen() {
         resources = new MainResources(App.inst().getAssets());
         stage = new Stage(new ScreenViewport());
+        stage.addListener(new KeyBinds(this));
         selectionManager = new GlyphSelectionManager(App.inst().getEvents());
 
         // Root table
@@ -62,6 +63,7 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
     public void dispose() {
         stage.dispose();
         resources.dispose();
+        selectionManager.dispose();
     }
 
     //region MainScreenContext implementation

@@ -21,13 +21,17 @@ public class KeyBinds extends InputListener {
         switch (keycode) {
             case Keys.N: {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                    //TODO new
+                    GlyphModel glyph = App.inst().getModel().getFontDocument().createGlyph(0);
+                    ctx.getSelectionManager().setSelectedGlyph(glyph);
                 }
                 break;
             }
-            case Keys.DEL: {
+            case Keys.FORWARD_DEL: {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                    //TODO del selected
+                    GlyphModel selectedGlyph = ctx.getSelectionManager().getSelectedGlyph();
+                    if (selectedGlyph != null) {
+                        App.inst().getModel().getFontDocument().deleteGlyph(selectedGlyph);
+                    }
                 }
                 break;
             }

@@ -36,10 +36,12 @@ public class SelectionOverlay extends Actor implements Overlay, EventHandler {
     public void handle(EventInfo event) {
         if (event instanceof GlyphSelectionChangedEvent) {
             GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
+            GlyphModel selectedGlyph = e.getSelectedGlyph();
 
             selectedGlyphs.clear();
-            selectedGlyphs.add(e.getSelectedGlyph());
-
+            if (selectedGlyph != null) {
+                selectedGlyphs.add(selectedGlyph);
+            }
         }
     }
 

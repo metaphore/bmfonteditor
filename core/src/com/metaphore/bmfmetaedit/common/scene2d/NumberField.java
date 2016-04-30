@@ -24,7 +24,7 @@ public class NumberField extends TextField {
         try {
             return Integer.parseInt(getText());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return 0;
         }
     }

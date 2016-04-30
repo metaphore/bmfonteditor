@@ -20,6 +20,7 @@ import com.metaphore.bmfmetaedit.common.scene2d.NumberField;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
+import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
 
 public class EditBoxContainer extends Container implements EventHandler {
     private final MainScreenContext ctx;
@@ -37,7 +38,9 @@ public class EditBoxContainer extends Container implements EventHandler {
         super.setStage(stage);
 
         if (stage != null) {
-            ctx.getEvents().addHandler(this, GlyphSelectionChangedEvent.class);
+            ctx.getEvents().addHandler(this,
+                    GlyphSelectionChangedEvent.class,
+                    GlyphModelChangedEvent.class);
         } else {
             ctx.getEvents().removeHandler(this);
         }
@@ -48,6 +51,20 @@ public class EditBoxContainer extends Container implements EventHandler {
         if (event instanceof GlyphSelectionChangedEvent) {
             GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
             content.setGlyphModel(e.getSelectedGlyph());
+
+        } else if (event instanceof GlyphModelChangedEvent) {
+            GlyphModelChangedEvent e = (GlyphModelChangedEvent) event;
+            GlyphModel glyphModel = e.getGlyphModel();
+            if (glyphModel == content.getGlyphModel()) {
+                switch (e.getType()) {
+                    case UPDATED:
+                        content.mapFromModel();
+                        break;
+                    case REMOVED:
+                        content.setGlyphModel(null);
+                        break;
+                }
+            }
         }
     }
 
@@ -91,7 +108,7 @@ public class EditBoxContainer extends Container implements EventHandler {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if (glyphModel != null) {
-                        mapToModel(glyphModel);
+                        mapToModel();
                         App.inst().getModel().getFontDocument().saveGlyphData(glyphModel);
                     }
                 }
@@ -130,9 +147,10 @@ public class EditBoxContainer extends Container implements EventHandler {
                 @Override
                 public boolean keyDown(InputEvent event, int keycode) {
                     switch (keycode) {
-                        case Input.Keys.ENTER: {
+                        case Input.Keys.SPACE: {
                             if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
                                 Scene2dUtils.simulateClick(bntSave);
+                                event.handle();
                             }
                             break;
                         }
@@ -153,7 +171,9 @@ public class EditBoxContainer extends Container implements EventHandler {
             return add(numberField).width(64f);
         }
 
-        private void mapFromModel(GlyphModel model) {
+        private void mapFromModel() {
+            GlyphModel model = glyphModel;
+
             lblUnicode.setText("U+" + model.hex);
             edtCode.setInt(model.code);
             edtX.setInt(model.x);
@@ -165,7 +185,9 @@ public class EditBoxContainer extends Container implements EventHandler {
             edtXAdv.setInt(model.xadvance);
         }
 
-        private void mapToModel(GlyphModel model) {
+        private void mapToModel() {
+            GlyphModel model = glyphModel;
+
             model.code = edtCode.getInt();
             model.x = edtX.getInt();
             model.y = edtY.getInt();
@@ -182,8 +204,12 @@ public class EditBoxContainer extends Container implements EventHandler {
             this.glyphModel = glyphModel;
 
             if (glyphModel != null) {
-                mapFromModel(glyphModel);
+                mapFromModel();
             }
+        }
+
+        public GlyphModel getGlyphModel() {
+            return glyphModel;
         }
     }
 

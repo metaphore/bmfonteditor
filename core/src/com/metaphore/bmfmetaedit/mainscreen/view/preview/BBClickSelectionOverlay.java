@@ -8,9 +8,8 @@ import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
-import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
-import com.metaphore.bmfmetaedit.model.events.GlyphDataChangedEvent;
+import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
 
 public class BBClickSelectionOverlay extends Actor implements Overlay {
     private final BBClickSelectionInputHandler bbClickSelection;
@@ -40,10 +39,10 @@ public class BBClickSelectionOverlay extends Actor implements Overlay {
 
         public void init(Array<GlyphModel> glyphs) {
             for (GlyphModel model : glyphs) {
-                index.put(model, new GlyphBB(model));
+                createGlyphBB(model);
             }
 
-            ctx.getEvents().addHandler(this, GlyphDataChangedEvent.class);
+            ctx.getEvents().addHandler(this, GlyphModelChangedEvent.class);
         }
 
         public void dispose() {
@@ -53,11 +52,20 @@ public class BBClickSelectionOverlay extends Actor implements Overlay {
 
         @Override
         public void handle(EventInfo event) {
-            if (event instanceof GlyphDataChangedEvent) {
-                GlyphDataChangedEvent e = (GlyphDataChangedEvent) event;
+            if (event instanceof GlyphModelChangedEvent) {
+                GlyphModelChangedEvent e = (GlyphModelChangedEvent) event;
                 GlyphModel glyphModel = e.getGlyphModel();
-                GlyphBB glyphBB = index.get(glyphModel);
-                glyphBB.updateBB();
+                switch (e.getType()) {
+                    case UPDATED:
+                        updateGlyphBB(glyphModel);
+                        break;
+                    case CREATED:
+                        createGlyphBB(glyphModel);
+                        break;
+                    case REMOVED:
+                        removeGlyphBB(glyphModel);
+                        break;
+                }
             }
         }
 
@@ -74,6 +82,17 @@ public class BBClickSelectionOverlay extends Actor implements Overlay {
             }
 
             return super.touchDown(event, x, y, pointer, button);
+        }
+
+        private void createGlyphBB(GlyphModel model) {
+            index.put(model, new GlyphBB(model));
+        }
+        private void removeGlyphBB(GlyphModel model) {
+            index.removeKey(model);
+        }
+        private void updateGlyphBB(GlyphModel model) {
+            GlyphBB glyphBB = index.get(model);
+            glyphBB.updateBB();
         }
     }
 
