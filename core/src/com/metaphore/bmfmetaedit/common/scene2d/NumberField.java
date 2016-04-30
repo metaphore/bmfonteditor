@@ -1,6 +1,8 @@
 package com.metaphore.bmfmetaedit.common.scene2d;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
 public class NumberField extends TextField {
     private final NumberTextFilter filter;
@@ -9,6 +11,16 @@ public class NumberField extends TextField {
         super("", style);
         filter = new NumberTextFilter();
         setTextFieldFilter(filter);
+
+        // Select all text on focus
+        addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                if (actor == NumberField.this) {
+                    selectAll();
+                }
+            }
+        });
     }
 
     public NumberField allowFloat() {
