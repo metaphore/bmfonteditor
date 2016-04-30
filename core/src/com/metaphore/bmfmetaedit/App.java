@@ -104,6 +104,7 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
             assets.dispose();
             assets = null;
         }
+        model.dispose();
     }
 
     //region Accessors
@@ -140,6 +141,12 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
         @Override
         public boolean keyDown(int keycode) {
             switch (keycode) {
+                case Input.Keys.F8: {
+                    // Restart game
+                    dispose();
+                    showScreen(new LoadScreen(App.this), false);
+                    return true;
+                }
                 case Keys.F11: {
                     GlobalSuspendEvent.dispatchHold();
                     return true;
@@ -148,12 +155,12 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
                     GlobalSuspendEvent.dispatchRelease();
                     return true;
                 }
-//                case Keys.Q: {
-//                    fileChoose(new FileChooserParams().save().title("Save").extensions("png", "fnt"), (success, fileHandle) -> {
-//                        System.out.println("File selected " + fileHandle);
-//                    });
-//                    return true;
-//                }
+                case Keys.Q: {
+                    fileChoose(new FileChooserParams().save().title("Save").extensions("png", "fnt"), (success, fileHandle) -> {
+                        System.out.println("File selected " + fileHandle);
+                    });
+                    return true;
+                }
                 case Keys.S: {
                     if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
                         model.saveDocument();

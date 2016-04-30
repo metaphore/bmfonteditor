@@ -1,13 +1,21 @@
 package com.metaphore.bmfmetaedit.mainscreen.view.editbox;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
+import com.crashinvaders.common.scene2d.Scene2dUtils;
+import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.common.scene2d.NumberField;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
@@ -44,30 +52,50 @@ public class EditBoxContainer extends Container implements EventHandler {
     }
 
     private class Content extends Table {
-        private static final float SIDE_PAD = 16f;
+        private static final float SIDE_PAD_H = 16f;
+        private static final float SIDE_PAD_V = 8f;
         public static final float PAD_LBL = 4f;
         public static final float SPACE_COL = 16f;
         public static final float SPACE_ROW = 8f;
 
+        // Styles
         private final Label.LabelStyle lsTitle;
         private final TextField.TextFieldStyle tfsField;
+        private final TextButton.TextButtonStyle tbsButton;
+
+        // Widgets
         private final Label lblUnicode;
         private final NumberField edtCode, edtX, edtY, edtWidth, edtHeight, edtXOff, edtYOff, edtXAdv;
 
         private GlyphModel glyphModel;
 
         public Content(MainScreenContext ctx) {
+            TextureAtlas atlas = ctx.getResources().atlas;
+
             lsTitle = new Label.LabelStyle(ctx.getResources().font, Color.WHITE);
             tfsField = new TextField.TextFieldStyle(ctx.getResources().font, Color.WHITE,
-                    new NinePatchDrawable(ctx.getResources().atlas.createPatch("text_cursor")),
-                    new TextureRegionDrawable(ctx.getResources().atlas.findRegion("text_selection")),
-                    new NinePatchDrawable(ctx.getResources().atlas.createPatch("input_field_bg")));
+                    new NinePatchDrawable(atlas.createPatch("text_cursor")),
+                    new TextureRegionDrawable(atlas.findRegion("text_selection")),
+                    new NinePatchDrawable(atlas.createPatch("input_field_bg")));
+            tbsButton = new TextButton.TextButtonStyle(
+                    new NinePatchDrawable(atlas.createPatch("btn_up")),
+                    new NinePatchDrawable(atlas.createPatch("btn_down")),
+                    null, ctx.getResources().font);
 
-            padTop(SIDE_PAD);
-            padLeft(SIDE_PAD);
-            padRight(SIDE_PAD);
+            pad(SIDE_PAD_V, SIDE_PAD_H, SIDE_PAD_V, SIDE_PAD_H);
 
-            setBackground(new NinePatchDrawable(ctx.getResources().atlas.createPatch("edit_panel_bg")));
+            setBackground(new NinePatchDrawable(atlas.createPatch("edit_panel_bg")));
+
+            TextButton bntSave = new TextButton("Save", tbsButton);
+            bntSave.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (glyphModel != null) {
+                        mapToModel(glyphModel);
+                        App.inst().getModel().getFontDocument().saveGlyphData(glyphModel);
+                    }
+                }
+            });
 
             addLabelCell("Code").padRight(PAD_LBL);
             edtCode = addInputCell().padRight(SPACE_COL).getActor();
@@ -95,6 +123,23 @@ public class EditBoxContainer extends Container implements EventHandler {
             row().padTop(SPACE_ROW);
             addLabelCell("XAdv").padRight(PAD_LBL);
             edtXAdv = addInputCell().padRight(SPACE_COL).getActor();
+            add(bntSave).colspan(2).expandX().fill();
+
+            // Save shortcut
+            addListener(new InputListener() {
+                @Override
+                public boolean keyDown(InputEvent event, int keycode) {
+                    switch (keycode) {
+                        case Input.Keys.ENTER: {
+                            if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+                                Scene2dUtils.simulateClick(bntSave);
+                            }
+                            break;
+                        }
+                    }
+                    return super.keyDown(event, keycode);
+                }
+            });
         }
 
         private Cell<Label> addLabelCell(String text) {
@@ -118,6 +163,17 @@ public class EditBoxContainer extends Container implements EventHandler {
             edtXOff.setInt(model.xoffset);
             edtYOff.setInt(model.yoffset);
             edtXAdv.setInt(model.xadvance);
+        }
+
+        private void mapToModel(GlyphModel model) {
+            model.code = edtCode.getInt();
+            model.x = edtX.getInt();
+            model.y = edtY.getInt();
+            model.width = edtWidth.getInt();
+            model.height = edtHeight.getInt();
+            model.xoffset = edtXOff.getInt();
+            model.yoffset = edtYOff.getInt();
+            model.xadvance = edtXAdv.getInt();
         }
 
         public void setGlyphModel(GlyphModel glyphModel) {

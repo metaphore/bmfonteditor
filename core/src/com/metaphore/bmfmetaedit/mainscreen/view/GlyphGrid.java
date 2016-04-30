@@ -1,14 +1,12 @@
 package com.metaphore.bmfmetaedit.mainscreen.view;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
@@ -16,6 +14,8 @@ import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
+import com.metaphore.bmfmetaedit.model.events.GlyphDataChangedEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
     private final MainScreenContext ctx;
     private final Array<GlyphItem> glyphItems;
-    private final Map<GlyphModel, GlyphItem> glyphMap;
+    private final Map<GlyphModel, GlyphItem> index;
 
     private boolean rearrangeRequired = true;
     private ScrollPane parenScrollPane;
@@ -37,7 +37,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         // Generate items
         Array<GlyphModel> glyphs = App.inst().getModel().getFontDocument().getGlyphs();
         glyphItems = new Array<>(glyphs.size);
-        glyphMap = new HashMap<>();
+        index = new HashMap<>(glyphs.size);
         for (int i = 0; i < glyphs.size; i++) {
             GlyphModel model = glyphs.get(i);
             GlyphItem glyphItem = new GlyphItem(ctx.getResources(), model);
@@ -48,7 +48,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
                 }
             });
             glyphItems.add(glyphItem);
-            glyphMap.put(model, glyphItem);
+            index.put(model, glyphItem);
         }
     }
 
@@ -62,7 +62,9 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
         if (stage != null) {
             ctx.getEvents().addHandler(this,
-                    GlyphSelectionChangedEvent.class);
+                    GlyphSelectionChangedEvent.class,
+                    GlyphDataChangedEvent.class
+            );
         } else {
             ctx.getEvents().removeHandler(this);
         }
@@ -72,21 +74,33 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
     public void handle(EventInfo event) {
         if (event instanceof GlyphSelectionChangedEvent) {
             GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
+            updateSelection(e.getSelectedGlyph());
 
-            GlyphItem lastSelected = null;
-            for (int i = 0; i < glyphItems.size; i++) {
-                GlyphItem glyphItem = glyphItems.get(i);
-                boolean selected = glyphItem.getModel() == e.getSelectedGlyph();
-                glyphItem.setSelected(selected);
-
-                if (selected) lastSelected = glyphItem;
-            }
-            if (lastSelected != null && parenScrollPane != null) {
-                Vector2 scrollPos = lastSelected.localToAscendantCoordinates(this, TMP_VEC2.set(0f, 0f));
-                parenScrollPane.scrollTo(scrollPos.x, scrollPos.y,
-                        lastSelected.getWidth(), lastSelected.getHeight(), false, true);
-            }
+        } else if (event instanceof GlyphDataChangedEvent) {
+            GlyphDataChangedEvent e = (GlyphDataChangedEvent) event;
+            updateGlyphData(e.getGlyphModel());
         }
+    }
+
+    private void updateSelection(GlyphModel selectedGlyph) {
+        GlyphItem lastSelected = null;
+        for (int i = 0; i < glyphItems.size; i++) {
+            GlyphItem glyphItem = glyphItems.get(i);
+            boolean selected = glyphItem.getModel() == selectedGlyph;
+            glyphItem.setSelected(selected);
+
+            if (selected) lastSelected = glyphItem;
+        }
+        if (lastSelected != null && parenScrollPane != null) {
+            Vector2 scrollPos = lastSelected.localToAscendantCoordinates(this, TMP_VEC2.set(0f, 0f));
+            parenScrollPane.scrollTo(scrollPos.x, scrollPos.y,
+                    lastSelected.getWidth(), lastSelected.getHeight(), false, true);
+        }
+    }
+
+    private void updateGlyphData(GlyphModel glyphModel) {
+        GlyphItem glyphItem = index.get(glyphModel);
+        glyphItem.mapFromModel();
     }
 
     @Override

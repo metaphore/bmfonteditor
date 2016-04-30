@@ -4,9 +4,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.crashinvaders.common.eventmanager.EventHandler;
+import com.crashinvaders.common.eventmanager.EventInfo;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
+import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
+import com.metaphore.bmfmetaedit.model.events.GlyphDataChangedEvent;
 
 public class BBClickSelectionOverlay extends Actor implements Overlay {
     private final BBClickSelectionInputHandler bbClickSelection;
@@ -31,17 +35,30 @@ public class BBClickSelectionOverlay extends Actor implements Overlay {
     }
 
     //TODO subscribe model change events
-    private class BBClickSelectionInputHandler extends InputListener {
+    private class BBClickSelectionInputHandler extends InputListener implements EventHandler {
         private final ArrayMap<GlyphModel, GlyphBB> index = new ArrayMap<>(1024);
 
         public void init(Array<GlyphModel> glyphs) {
             for (GlyphModel model : glyphs) {
                 index.put(model, new GlyphBB(model));
             }
+
+            ctx.getEvents().addHandler(this, GlyphDataChangedEvent.class);
         }
 
         public void dispose() {
             index.clear();
+            ctx.getEvents().removeHandler(this);
+        }
+
+        @Override
+        public void handle(EventInfo event) {
+            if (event instanceof GlyphDataChangedEvent) {
+                GlyphDataChangedEvent e = (GlyphDataChangedEvent) event;
+                GlyphModel glyphModel = e.getGlyphModel();
+                GlyphBB glyphBB = index.get(glyphModel);
+                glyphBB.updateBB();
+            }
         }
 
         @Override

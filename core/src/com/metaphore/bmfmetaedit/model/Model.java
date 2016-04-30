@@ -15,6 +15,7 @@ public class Model {
 
     public void initTestDocument() {
         fontDocument = FontDocument.createFromFont(Gdx.files.internal("test/nokia8.fnt").file());
+        fontDocument.setEventManager(eventManager);
     }
 
     public FontDocument getFontDocument() {
@@ -25,5 +26,11 @@ public class Model {
         if (fontDocument == null) return;
 
         BitmapFontWriter.writeFont(fontDocument.getFont().getData(), new String[]{"nokia8.png"}, Gdx.files.absolute("d:/out.fnt"), new BitmapFontWriter.FontInfo("nokia8", 8), 512, 512);
+    }
+
+    public void dispose() {
+        if (fontDocument != null) {
+            fontDocument.dispose();
+        }
     }
 }

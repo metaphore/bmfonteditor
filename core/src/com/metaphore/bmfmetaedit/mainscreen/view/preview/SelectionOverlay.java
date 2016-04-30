@@ -39,6 +39,7 @@ public class SelectionOverlay extends Actor implements Overlay, EventHandler {
 
             selectedGlyphs.clear();
             selectedGlyphs.add(e.getSelectedGlyph());
+
         }
     }
 

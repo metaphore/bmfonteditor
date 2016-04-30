@@ -18,6 +18,18 @@ public class GlyphUtils {
         return glyphModel;
     }
 
+    public static GlyphModel fromGlyphModel(GlyphModel glyphModel, BitmapFont.Glyph glyph) {
+        glyph.id = glyphModel.code;
+        glyph.srcX = glyphModel.x;
+        glyph.srcY = glyphModel.y;
+        glyph.width = glyphModel.width;
+        glyph.height = glyphModel.height;
+        glyph.xoffset = glyphModel.xoffset;
+        glyph.yoffset = glyphModel.yoffset;
+        glyph.xadvance = glyphModel.xadvance;
+        return glyphModel;
+    }
+
     public static String hexCode(int unicode) {
         String hexValue = Integer.toHexString(unicode).toUpperCase();
         while (hexValue.length() < 4) {

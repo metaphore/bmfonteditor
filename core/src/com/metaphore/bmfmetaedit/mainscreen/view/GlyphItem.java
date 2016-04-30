@@ -21,6 +21,11 @@ public class GlyphItem extends Table {
     private final BgDrawable bgDrawable;
     private final ClickListener clickListener;
     private final GlyphModel model;
+
+    private final Label lblHex;
+    private final Label lblDec;
+    private final GlyphPreview glyphPreview;
+
     private boolean selected;
 
     public GlyphItem(MainResources resources, GlyphModel model) {
@@ -29,9 +34,9 @@ public class GlyphItem extends Table {
         addListener(clickListener = new ClickListener());
         setTouchable(Touchable.enabled);
 
-        Label lblHex = new Label(model.hex, new Label.LabelStyle(resources.font, Color.WHITE));
-        Label lblDec = new Label("#"+model.code, new Label.LabelStyle(resources.font, Color.WHITE));
-        GlyphPreview glyphPreview = new GlyphPreview(resources, model);
+        lblHex = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
+        lblDec = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
+        glyphPreview = new GlyphPreview(resources, model);
         Container previewContainer = new Container<>(glyphPreview);
         previewContainer.setBackground(new NinePatchDrawable(resources.atlas.createPatch("glyph_preview_border")));
         previewContainer.pad(1f);
@@ -43,6 +48,14 @@ public class GlyphItem extends Table {
         add(lblHex);
         row();
         add(lblDec);
+
+        mapFromModel();
+    }
+
+    public void mapFromModel() {
+        lblHex.setText(model.hex);
+        lblDec.setText("#"+model.code);
+        glyphPreview.mapFromModel();
     }
 
     @Override
@@ -104,7 +117,7 @@ public class GlyphItem extends Table {
             if (stage != null) {
                 init();
             } else {
-//                dispose();
+                dispose();
             }
         }
 
@@ -115,7 +128,7 @@ public class GlyphItem extends Table {
             TextureRegion pageRegion = font.getRegion(glyph.page);
             glyphRegion.setRegion(pageRegion, glyph.srcX, glyph.srcY, glyph.width, glyph.height);
 
-            invalidate();
+            invalidateHierarchy();
         }
 
         private void dispose() {
@@ -133,6 +146,11 @@ public class GlyphItem extends Table {
             if (glyphRegion != null) {
                 batch.draw(glyphRegion, getX(), getY(), getWidth(), getHeight());
             }
+        }
+
+        public void mapFromModel() {
+            dispose();
+            init();
         }
     }
 

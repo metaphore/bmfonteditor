@@ -15,7 +15,7 @@ public class PreviewHolder extends WidgetGroup {
 
     private final Texture background;
     private final PreviewCanvas previewCanvas;
-    private float bgScale = 64f;
+    private float bgScale = 16f;
 
     public PreviewHolder(MainScreenContext ctx) {
         this.previewCanvas = new PreviewCanvas(ctx);
