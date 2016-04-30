@@ -12,7 +12,7 @@ import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 
-public class SelectionOverlay extends Actor implements Overlay, EventHandler {
+class SelectionOverlay extends Actor implements Overlay, EventHandler {
     private final MainScreenContext ctx;
     private final Array<GlyphModel> selectedGlyphs = new Array<>();
 

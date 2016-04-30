@@ -21,9 +21,9 @@ public class PreviewCanvas extends Group {
 
         addActor(new SelectionOverlay(ctx));
 
-        addActor(new BBClickSelectionOverlay(ctx));
+        addListener(new AdjacentPixelsBBGeneratorInputHandler(ctx));
 
-        addActor(new AdjustPixelsBBGeneratorOverlay(ctx));
+        addListener(new BBClickSelectionInputHandler(ctx));
     }
 
     @Override

@@ -6,30 +6,27 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 
-public class AdjustPixelsBBGeneratorOverlay extends Actor implements Overlay {
+class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
 
     private final MainScreenContext ctx;
 
-    public AdjustPixelsBBGeneratorOverlay(MainScreenContext ctx) {
+    public AdjacentPixelsBBGeneratorInputHandler(MainScreenContext ctx) {
         this.ctx = ctx;
+    }
 
-        addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (button == 0 && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-                    return tryBuildBB(MathUtils.floor(x), MathUtils.ceil(y));
-                } else {
-                    return false;
-                }
-            }
-        });
+    @Override
+    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        if (button == 0 && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+            return tryBuildBB(MathUtils.floor(x), MathUtils.ceil(y));
+        } else {
+            return false;
+        }
     }
 
     private boolean tryBuildBB(int x, int y) {
