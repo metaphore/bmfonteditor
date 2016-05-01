@@ -180,5 +180,12 @@ public class FontDocument {
 
         eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.REMOVED));
     }
+
+    public GlyphModel findGlyphByCode(int code) {
+        for (GlyphModel glyph : glyphs) {
+            if (glyph.code == code) return glyph;
+        }
+        return null;
+    }
     //endregion
 }

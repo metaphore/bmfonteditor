@@ -2,9 +2,11 @@ package com.metaphore.bmfmetaedit.mainscreen.view.dialogs;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.metaphore.bmfmetaedit.common.scene2d.NumericField;
 import com.metaphore.bmfmetaedit.mainscreen.MainResources;
@@ -28,24 +30,19 @@ public class CreateGlyphDialog extends BaseDialog<CreateGlyphDialog.Result> {
         edtCode.setTextFieldListener((textField, c) -> updateHexValue());
         updateHexValue();
 
-        Table content = getContentTable();
-        content.add(new Label("Code:", resources.styles.lsTitle)).padRight(8f);
-        content.add(edtCode).width(64f);
-        content.row();
-        content.add();
-        content.add(lblHex).right();
+        TextButton btnReadKeyCode = new TextButton("Read key", resources.styles.tbsButton);
+        btnReadKeyCode.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                new ReadKeyCharDialog(resources).onResult(edtCode::setInt).show(getStage());
+            }
+        });
 
-//        content.row();
-//        TextButton btnTest = new TextButton("Pick from unicode", resources.styles.tbsButton);
-//        btnTest.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//                new CreateGlyphDialog(resources)
-//                        .onResult(r -> edtCode.setInt(r.code))
-//                        .show(getStage());
-//            }
-//        });
-//        content.add(btnTest).colspan(2);
+        Table content = getContentTable();
+        content.add(new Label("Code", resources.styles.lsTitle));
+        content.add(edtCode).width(64f);
+        content.add(lblHex);
+        content.add(btnReadKeyCode);
 
         button("Cancel");
         button("Ok", ()-> new Result(edtCode.getInt()));

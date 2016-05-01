@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.crashinvaders.common.ValueArrayMap;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
@@ -18,13 +19,16 @@ import com.metaphore.bmfmetaedit.model.GlyphModel;
 import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
 import com.metaphore.bmfmetaedit.model.events.PageTextureUpdatedEvent;
 
+import java.util.Comparator;
+
 public class GlyphGrid extends VerticalGroup implements EventHandler {
     private static final Vector2 TMP_VEC2 = new Vector2();
     public static final float SPACE_X = 4f;
 
     private final MainScreenContext ctx;
     private final FontDocument fontDocument;
-    private final ArrayMap<GlyphModel, GlyphItem> index;
+    private final ValueArrayMap<GlyphModel, GlyphItem> index;
+    private final Comparator<GlyphItem> glyphComparator = new GlyphItemComparator();
 
     private boolean rearrangeRequired = true;
     private ScrollPane parenScrollPane;
@@ -36,7 +40,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
         // Generate items
         Array<GlyphModel> glyphs = fontDocument.getGlyphs();
-        index = new ArrayMap<>(glyphs.size);
+        index = new ValueArrayMap<>(glyphs.size);
         for (int i = 0; i < glyphs.size; i++) {
             GlyphModel model = glyphs.get(i);
             createGlyphItem(model);
@@ -85,7 +89,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
         } else if (event instanceof PageTextureUpdatedEvent) {
             // Refresh all glyphs
-            for (int i = 0; i < index.size; i++) {
+            for (int i = 0; i < index.size(); i++) {
                 index.getValueAt(i).mapFromModel();
             }
         }
@@ -93,7 +97,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
     private void updateSelection(GlyphModel selectedGlyph) {
         GlyphItem lastSelected = null;
-        for (int i = 0; i < index.size; i++) {
+        for (int i = 0; i < index.size(); i++) {
             GlyphItem glyphItem = index.getValueAt(i);
             boolean selected = glyphItem.getModel() == selectedGlyph;
             glyphItem.setSelected(selected);
@@ -122,7 +126,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         invalidate();
     }
     private void removeGlyphItem(GlyphModel glyphModel) {
-        GlyphItem glyphItem = index.removeKey(glyphModel);
+        GlyphItem glyphItem = index.remove(glyphModel);
         glyphItem.remove();
 
         rearrangeRequired = true;
@@ -131,6 +135,9 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
     private void updateGlyphItem(GlyphModel glyphModel) {
         GlyphItem glyphItem = index.get(glyphModel);
         glyphItem.mapFromModel();
+
+        rearrangeRequired = true;
+        invalidate();
     }
 
     @Override
@@ -143,9 +150,11 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
     public void layout() {
         if (rearrangeRequired) {
             rearrangeRequired = false;
-            float width = getWidth();
 
-            // Optimize rows with pools
+            float width = getWidth();
+            index.sort(glyphComparator);
+
+            //TODO Optimize rows with pools
 
             int idx = 0;
             int idxInRow = 0;
@@ -153,7 +162,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
             HorizontalGroup row = new HorizontalGroup();
             row.setTransform(false);
             row.space(SPACE_X);
-            while (idx < index.size) {
+            while (idx < index.size()) {
                 GlyphItem glyphItem = index.getValueAt(idx++);
                 glyphItem.pack();
 
@@ -184,5 +193,12 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         }
 
         super.layout();
+    }
+
+    private static class GlyphItemComparator implements Comparator<GlyphItem> {
+        @Override
+        public int compare(GlyphItem l, GlyphItem r) {
+            return Integer.compare(l.getModel().code, r.getModel().code);
+        }
     }
 }

@@ -5,7 +5,7 @@ filter: Nearest,Nearest
 repeat: none
 glyph_li_bg
   rotate: false
-  xy: 1, 32
+  xy: 1, 96
   size: 31, 31
   split: 15, 15, 15, 15
   orig: 31, 31
@@ -13,7 +13,7 @@ glyph_li_bg
   index: -1
 glyph_li_bg_hover
   rotate: false
-  xy: 34, 32
+  xy: 1, 63
   size: 31, 31
   split: 15, 15, 15, 15
   orig: 31, 31
@@ -21,7 +21,7 @@ glyph_li_bg_hover
   index: -1
 glyph_li_bg_selected
   rotate: false
-  xy: 67, 32
+  xy: 1, 30
   size: 31, 31
   split: 15, 15, 15, 15
   orig: 31, 31
@@ -29,29 +29,29 @@ glyph_li_bg_selected
   index: -1
 split_pane_drawer_bg
   rotate: false
-  xy: 100, 31
+  xy: 34, 95
   size: 16, 32
   orig: 16, 32
   offset: 0, 0
   index: -1
+dialog_bg
+  rotate: false
+  xy: 34, 63
+  size: 13, 30
+  split: 6, 6, 24, 5
+  orig: 13, 30
+  offset: 0, 0
+  index: -1
 split_pane_drawer_dots
   rotate: false
-  xy: 1, 6
+  xy: 1, 4
   size: 4, 24
   orig: 4, 24
   offset: 0, 0
   index: -1
-dialog_bg
-  rotate: false
-  xy: 7, 17
-  size: 13, 13
-  split: 6, 6, 5, 7
-  orig: 13, 13
-  offset: 0, 0
-  index: -1
 edit_panel_bg
   rotate: false
-  xy: 7, 8
+  xy: 34, 54
   size: 13, 7
   split: 6, 6, 5, 1
   orig: 13, 7
@@ -59,7 +59,7 @@ edit_panel_bg
   index: -1
 btn_down
   rotate: false
-  xy: 118, 54
+  xy: 52, 118
   size: 7, 9
   split: 3, 3, 5, 3
   orig: 7, 9
@@ -67,15 +67,23 @@ btn_down
   index: -1
 btn_up
   rotate: false
-  xy: 22, 21
+  xy: 7, 19
   size: 7, 9
   split: 3, 3, 2, 6
   orig: 7, 9
   offset: 0, 0
   index: -1
+text_cursor
+  rotate: false
+  xy: 34, 46
+  size: 3, 6
+  split: 0, 3, 3, 2
+  orig: 3, 6
+  offset: 0, 0
+  index: -1
 glyph_preview_border
   rotate: false
-  xy: 1, 1
+  xy: 52, 113
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -83,30 +91,22 @@ glyph_preview_border
   index: -1
 input_field_bg
   rotate: false
-  xy: 1, 1
+  xy: 52, 113
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
   offset: 0, 0
   index: -1
-text_cursor
-  rotate: false
-  xy: 118, 46
-  size: 3, 6
-  split: 0, 3, 3, 2
-  orig: 3, 6
-  offset: 0, 0
-  index: -1
 dialog_dim
   rotate: false
-  xy: 22, 18
+  xy: 1, 1
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 text_selection
   rotate: false
-  xy: 31, 29
+  xy: 4, 1
   size: 1, 1
   orig: 1, 1
   offset: 0, 0

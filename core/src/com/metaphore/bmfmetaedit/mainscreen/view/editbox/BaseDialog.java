@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.metaphore.bmfmetaedit.mainscreen.MainResources;
 
@@ -28,9 +29,11 @@ public abstract class BaseDialog<T> extends Dialog {
         super(title, resources.styles.wsDialog);
         this.resources = resources;
         pad(8f);
+        padTop(21f);
+        getTitleLabel().setAlignment(Align.center);
 
         Table content = getContentTable();
-        content.pad(16f);
+        content.pad(12f);
 
         // Remove default dialog buttons click logic
         Table buttonTable = getButtonTable();
@@ -44,6 +47,14 @@ public abstract class BaseDialog<T> extends Dialog {
                 result(resultProviders.get(actor).generateResult());
                 if (!cancelHide) hide();
                 cancelHide = false;
+            }
+        });
+
+        // Consume all key down events
+        addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                return true;
             }
         });
     }
@@ -94,16 +105,22 @@ public abstract class BaseDialog<T> extends Dialog {
         T generateResult();
     }
 
-    private static class NullResultProvider<T> implements ResultProvider<T> {
+    public static class StaticResult<T> implements ResultProvider<T> {
+        private final T value;
+
+        public StaticResult(T value) {
+            this.value = value;
+        }
+
         @Override
         public T generateResult() {
-            return null;
+            return value;
         }
     }
 
     @Override
     public Dialog button(String text) {
-        return button(text, new NullResultProvider<>());
+        return button(text, new StaticResult(null));
     }
 
     public Dialog button(String text, ResultProvider<T> resultProvider) {
@@ -114,7 +131,7 @@ public abstract class BaseDialog<T> extends Dialog {
     }
 
     public Dialog key (final int keycode) {
-        return key(keycode, new NullResultProvider<>());
+        return key(keycode, new StaticResult(null));
     }
 
     public Dialog key (final int keycode, final ResultProvider<T> resultProvider) {

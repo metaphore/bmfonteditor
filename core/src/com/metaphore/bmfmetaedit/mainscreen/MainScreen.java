@@ -16,11 +16,12 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
     private final MainResources resources;
     private final Stage stage;
     private final GlyphSelectionManager selectionManager;
+    private final KeyBinds keyBinds;
 
     public MainScreen() {
         resources = new MainResources(App.inst().getAssets());
         stage = new Stage(new ScreenViewport());
-        stage.addListener(new KeyBinds(this));
+        keyBinds = new KeyBinds(this);
         selectionManager = new GlyphSelectionManager(App.inst().getEvents());
 
         // Root table
@@ -47,11 +48,13 @@ public class MainScreen extends BaseScreen implements MainScreenContext {
     @Override
     public void show(Bundle bundle) {
         App.inst().getInput().addProcessor(stage, 0);
+        App.inst().getInput().addProcessor(keyBinds, 5);
     }
 
     @Override
     public void hide(Bundle bundle) {
         App.inst().getInput().removeProcessor(stage);
+        App.inst().getInput().removeProcessor(keyBinds);
     }
 
     @Override

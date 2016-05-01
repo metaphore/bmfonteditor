@@ -46,9 +46,9 @@ class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
             scope.processCycle();
 
             selectedGlyph.x = scope.getX();
-            selectedGlyph.y = pixmap.getHeight() - scope.getY() - scope.getHeight() + 1;
+            selectedGlyph.y = pixmap.getHeight() - scope.getY() - scope.getHeight() + 1 - 1;
             selectedGlyph.width = scope.getWidth();
-            selectedGlyph.height = scope.getHeight();
+            selectedGlyph.height = scope.getHeight() + 1;
             selectedGlyph.xoffset = 0;
             selectedGlyph.yoffset = 10;
             selectedGlyph.xadvance = selectedGlyph.width-1;
