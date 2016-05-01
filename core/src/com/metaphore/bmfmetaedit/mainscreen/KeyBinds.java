@@ -2,11 +2,11 @@ package com.metaphore.bmfmetaedit.mainscreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.actionresolver.FileChooserParams;
+import com.metaphore.bmfmetaedit.mainscreen.view.dialogs.CreateGlyphDialog;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 import com.metaphore.bmfmetaedit.model.Model;
 
@@ -28,13 +28,21 @@ public class KeyBinds extends InputListener {
         switch (keycode) {
             case Keys.N: {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                    GlyphModel glyph = model.getFontDocument().createGlyph(0);
-                    ctx.getSelectionManager().setSelectedGlyph(glyph);
+                    // Create new glyph
+
+                    new CreateGlyphDialog(ctx.getResources())
+                            .onResult(r -> {
+                                GlyphModel glyph = model.getFontDocument().createGlyph(r.code);
+                                ctx.getSelectionManager().setSelectedGlyph(glyph);
+                            })
+                            .show(ctx.getStage());
                 }
                 break;
             }
             case Keys.FORWARD_DEL: {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+                    // Delete selected glyph
+
                     GlyphModel selectedGlyph = ctx.getSelectionManager().getSelectedGlyph();
                     if (selectedGlyph != null) {
                         model.getFontDocument().deleteGlyph(selectedGlyph);
@@ -44,12 +52,9 @@ public class KeyBinds extends InputListener {
             }
             case Keys.S: {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-                    File rootDir = null;
-                    File fontFile = model.getFontDocument().getFont().getData().fontFile.file();
-                    if (fontFile != null && fontFile.isFile()) {
-                        rootDir = fontFile.getParentFile();
-                    }
+                    // Save current font
 
+                    File fontFile = model.getFontDocument().getFont().getData().fontFile.file();
                     App.inst().fileChoose(new FileChooserParams().save().title("Save as").extensions("fnt").rootDir(fontFile), (success, fileHandle) -> {
                         if (success) model.saveDocument(fileHandle);
                     });

@@ -16,7 +16,7 @@ import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
 import com.crashinvaders.common.scene2d.Scene2dUtils;
 import com.metaphore.bmfmetaedit.App;
-import com.metaphore.bmfmetaedit.common.scene2d.NumberField;
+import com.metaphore.bmfmetaedit.common.scene2d.NumericField;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
@@ -82,7 +82,7 @@ public class EditBoxContainer extends Container implements EventHandler {
 
         // Widgets
         private final Label lblUnicode;
-        private final NumberField edtCode, edtX, edtY, edtWidth, edtHeight, edtXOff, edtYOff, edtXAdv;
+        private final NumericField edtCode, edtX, edtY, edtWidth, edtHeight, edtXOff, edtYOff, edtXAdv;
 
         private GlyphModel glyphModel;
 
@@ -165,10 +165,10 @@ public class EditBoxContainer extends Container implements EventHandler {
             return add(label).right();
         }
 
-        private Cell<NumberField> addInputCell() {
-            NumberField numberField = new NumberField(tfsField);
-            numberField.setAlignment(Align.right);
-            return add(numberField).width(64f);
+        private Cell<NumericField> addInputCell() {
+            NumericField numericField = new NumericField(tfsField);
+            numericField.setAlignment(Align.right);
+            return add(numericField).width(64f);
         }
 
         private void mapFromModel() {

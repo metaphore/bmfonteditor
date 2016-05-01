@@ -41,12 +41,20 @@ split_pane_drawer_dots
   orig: 4, 24
   offset: 0, 0
   index: -1
+dialog_bg
+  rotate: false
+  xy: 7, 17
+  size: 13, 13
+  split: 6, 6, 5, 7
+  orig: 13, 13
+  offset: 0, 0
+  index: -1
 edit_panel_bg
   rotate: false
-  xy: 7, 24
-  size: 13, 6
-  split: 6, 6, 5, 0
-  orig: 13, 6
+  xy: 7, 8
+  size: 13, 7
+  split: 6, 6, 5, 1
+  orig: 13, 7
   offset: 0, 0
   index: -1
 btn_down
@@ -59,7 +67,7 @@ btn_down
   index: -1
 btn_up
   rotate: false
-  xy: 7, 13
+  xy: 22, 21
   size: 7, 9
   split: 3, 3, 2, 6
   orig: 7, 9
@@ -83,15 +91,22 @@ input_field_bg
   index: -1
 text_cursor
   rotate: false
-  xy: 22, 24
+  xy: 118, 46
   size: 3, 6
   split: 0, 3, 3, 2
   orig: 3, 6
   offset: 0, 0
   index: -1
+dialog_dim
+  rotate: false
+  xy: 22, 18
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 text_selection
   rotate: false
-  xy: 118, 51
+  xy: 31, 29
   size: 1, 1
   orig: 1, 1
   offset: 0, 0

@@ -101,7 +101,7 @@ public class PreviewHolder extends WidgetGroup {
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            float scaleFactor = 1f + SCALE_FACTOR*amount;
+            float scaleFactor = 1f - SCALE_FACTOR*amount;
 
             target.removeAction(scaleAction);
             scaleAction.restart();
