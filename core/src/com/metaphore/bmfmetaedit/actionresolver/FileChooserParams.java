@@ -2,10 +2,13 @@ package com.metaphore.bmfmetaedit.actionresolver;
 
 import com.badlogic.gdx.utils.Array;
 
+import java.io.File;
+
 public class FileChooserParams {
     private final Array<String> extensions = new Array<>();
     private boolean open = true;
     private String title;
+    private File rootDir;
 
     public boolean isOpen() {
         return open;
@@ -28,6 +31,11 @@ public class FileChooserParams {
         return this;
     }
 
+    public FileChooserParams rootDir(File rootDir) {
+        this.rootDir = rootDir;
+        return this;
+    }
+
     public Array<String> getExtensions() {
         return extensions;
     }
@@ -39,5 +47,9 @@ public class FileChooserParams {
 
     public String getTitle() {
         return title;
+    }
+
+    public File getRootDir() {
+        return rootDir;
     }
 }

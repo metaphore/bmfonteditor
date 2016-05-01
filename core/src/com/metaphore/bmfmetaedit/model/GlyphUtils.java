@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class GlyphUtils {
 
-    public static GlyphModel toGlyphModel(GlyphModel glyphModel, BitmapFont.Glyph glyph) {
+    public static GlyphModel toGlyphModel(BitmapFont font, GlyphModel glyphModel, BitmapFont.Glyph glyph) {
         glyphModel.name = "#" + glyph.id;
         glyphModel.code = glyph.id;
         glyphModel.hex = hexCode(glyph.id);
@@ -18,7 +18,7 @@ public class GlyphUtils {
         return glyphModel;
     }
 
-    public static GlyphModel fromGlyphModel(GlyphModel glyphModel, BitmapFont.Glyph glyph) {
+    public static GlyphModel fromGlyphModel(BitmapFont font, GlyphModel glyphModel, BitmapFont.Glyph glyph) {
         glyph.id = glyphModel.code;
         glyph.srcX = glyphModel.x;
         glyph.srcY = glyphModel.y;

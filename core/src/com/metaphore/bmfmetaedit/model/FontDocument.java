@@ -8,16 +8,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.eventmanager.EventManager;
 import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.io.File;
 
 public class FontDocument {
     public static final int CHUNK_SIZE = 512;
     private final BitmapFont font;
+    private final EventManager eventManager;
     private final Array<GlyphModel> glyphs;
-    private EventManager eventManager;
 
-    public FontDocument(BitmapFont font) {
+    private final Array<PageModel> pages;
+
+    public FontDocument(EventManager eventManager, BitmapFont font) {
+        this.eventManager = eventManager;
         this.font = font;
 
         glyphs = new Array<>(1024);
@@ -26,22 +30,33 @@ public class FontDocument {
             for (BitmapFont.Glyph glyph : glyphChunk) {
                 if (glyph == null) continue;
 
-                GlyphModel glyphModel = GlyphUtils.toGlyphModel(new GlyphModel(glyph), glyph);
+                GlyphModel glyphModel = GlyphUtils.toGlyphModel(font, new GlyphModel(glyph), glyph);
                 glyphs.add(glyphModel);
             }
+        }
+
+        String[] pageImagePaths = font.getData().imagePaths;
+        pages = new Array<>(pageImagePaths.length);
+        for (String pageImagePath : pageImagePaths) {
+            PageModel pageModel = new PageModel(eventManager, Gdx.files.absolute(pageImagePath));
+            pages.add(pageModel);
         }
     }
 
     void dispose() {
         font.dispose();
-    }
 
-    void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
+        for (PageModel page : pages) {
+            page.dispose();
+        }
     }
 
     public BitmapFont getFont() {
         return font;
+    }
+
+    public Array<PageModel> getPages() {
+        return pages;
     }
 
     public Array<GlyphModel> getGlyphs() {
@@ -85,11 +100,9 @@ public class FontDocument {
             newChunk[newGlyphIdx] = glyph;
         }
 
-        GlyphUtils.fromGlyphModel(glyphModel, glyph);
-        GlyphUtils.toGlyphModel(glyphModel, glyph);
-        if (eventManager != null) {
-            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.UPDATED));
-        }
+        GlyphUtils.fromGlyphModel(font, glyphModel, glyph);
+        GlyphUtils.toGlyphModel(font, glyphModel, glyph);
+        eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.UPDATED));
     }
 
     private BitmapFont.Glyph obtainFontGlyph(int code) {
@@ -111,7 +124,7 @@ public class FontDocument {
     }
 
     //region Factory methods
-    public static FontDocument createFromFont(File file) {
+    public static BitmapFont loadBitmapFont(File file) {
         FileHandle fileHandle = Gdx.files.absolute(file.getAbsolutePath());
         BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData(fileHandle, false);
         int pages = data.getImagePaths().length;
@@ -130,7 +143,7 @@ public class FontDocument {
         BitmapFont bitmapFont = new BitmapFont(data, regs, true);
         bitmapFont.setOwnsTexture(true);
 
-        return new FontDocument(bitmapFont);
+        return bitmapFont;
     }
 
     public GlyphModel createGlyph(int code) {
@@ -149,12 +162,10 @@ public class FontDocument {
         glyph.id = code;
         chunk[glyphIdx] = glyph;
 
-        GlyphModel glyphModel = GlyphUtils.toGlyphModel(new GlyphModel(glyph), glyph);
+        GlyphModel glyphModel = GlyphUtils.toGlyphModel(font, new GlyphModel(glyph), glyph);
         glyphs.add(glyphModel);
 
-        if (eventManager != null) {
-            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.CREATED));
-        }
+        eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.CREATED));
         return glyphModel;
     }
 
@@ -167,9 +178,7 @@ public class FontDocument {
         // Remove from array
         ensureChunkExists(glyphModel.code / CHUNK_SIZE)[glyphModel.code % CHUNK_SIZE] = null;
 
-        if (eventManager != null) {
-            eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.REMOVED));
-        }
+        eventManager.dispatchEvent(new GlyphModelChangedEvent(glyphModel, GlyphModelChangedEvent.Type.REMOVED));
     }
     //endregion
 }

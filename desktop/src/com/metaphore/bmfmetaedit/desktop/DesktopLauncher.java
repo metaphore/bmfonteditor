@@ -11,6 +11,7 @@ import com.metaphore.bmfmetaedit.actionresolver.FileChooserParams;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 
 public class DesktopLauncher implements ActionResolver {
     public static void main(String[] arg) {
@@ -27,7 +28,12 @@ public class DesktopLauncher implements ActionResolver {
         SwingUtilities.invokeLater(() -> {
             JPanel panel = new JPanel(new FlowLayout());
 
-            JFileChooser fc = new JFileChooser(Gdx.files.internal("./").file());
+            File rootDir = params.getRootDir();
+            if (rootDir == null) {
+                rootDir = Gdx.files.internal("./").file();
+            }
+
+            JFileChooser fc = new JFileChooser(rootDir);
             fc.setMultiSelectionEnabled(false);
             fc.setDialogType(params.isOpen() ? JFileChooser.OPEN_DIALOG : JFileChooser.SAVE_DIALOG);
             fc.setDialogTitle(params.getTitle());

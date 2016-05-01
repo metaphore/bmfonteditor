@@ -7,18 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.view.editbox.EditBoxContainer;
+import com.metaphore.bmfmetaedit.mainscreen.view.glyphgrid.GlyphGrid;
 import com.metaphore.bmfmetaedit.mainscreen.view.preview.PreviewHolder;
-import com.metaphore.bmfmetaedit.model.GlyphModel;
 
 public class RootTable extends Table {
     public RootTable(MainScreenContext ctx) {
 
-        GlyphGrid glyphGrid = new GlyphGrid(ctx);
+        GlyphGrid glyphGrid = new GlyphGrid(ctx, App.inst().getModel().getFontDocument());
         ScrollPane glyphGridScroller = new ScrollPane(glyphGrid);
         glyphGridScroller.setScrollingDisabled(true, false);
         glyphGridScroller.addListener(new CaptureScrollOnHover(glyphGridScroller));

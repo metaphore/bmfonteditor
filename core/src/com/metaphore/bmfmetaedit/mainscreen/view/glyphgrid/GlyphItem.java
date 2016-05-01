@@ -1,8 +1,10 @@
-package com.metaphore.bmfmetaedit.mainscreen.view;
+package com.metaphore.bmfmetaedit.mainscreen.view.glyphgrid;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,12 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.Pools;
-import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainResources;
+import com.metaphore.bmfmetaedit.model.FontDocument;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 
-public class GlyphItem extends Table {
+class GlyphItem extends Table {
 
     private final BgDrawable bgDrawable;
     private final ClickListener clickListener;
@@ -28,7 +29,7 @@ public class GlyphItem extends Table {
 
     private boolean selected;
 
-    public GlyphItem(MainResources resources, GlyphModel model) {
+    public GlyphItem(MainResources resources, FontDocument fontDocument, GlyphModel model) {
         this.model = model;
         setBackground(bgDrawable = new BgDrawable(resources.atlas));
         addListener(clickListener = new ClickListener());
@@ -36,7 +37,7 @@ public class GlyphItem extends Table {
 
         lblHex = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
         lblDec = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
-        glyphPreview = new GlyphPreview(resources, model);
+        glyphPreview = new GlyphPreview(resources, fontDocument, model);
         Container previewContainer = new Container<>(glyphPreview);
         previewContainer.setBackground(new NinePatchDrawable(resources.atlas.createPatch("glyph_preview_border")));
         previewContainer.pad(1f);
@@ -55,7 +56,7 @@ public class GlyphItem extends Table {
     public void mapFromModel() {
         lblHex.setText(model.hex);
         lblDec.setText("#"+model.code);
-        glyphPreview.mapFromModel();
+        glyphPreview.updateTextureRegion();
     }
 
     @Override
@@ -82,75 +83,42 @@ public class GlyphItem extends Table {
     private static class GlyphPreview extends Widget {
         public static final float GLYPH_SCALE = 8f;
 
+        private final FontDocument fontDocument;
         private final GlyphModel model;
-        private final BitmapFont font;
-        private final BitmapFont.Glyph glyph;
-//        private final Texture background;
-        private TextureRegion glyphRegion;
+        private final TextureRegion glyphRegion = new TextureRegion();
 
-        public GlyphPreview(MainResources resources, GlyphModel model) {
+        public GlyphPreview(MainResources resources, FontDocument fontDocument, GlyphModel model) {
+            this.fontDocument = fontDocument;
             this.model = model;
-            font = App.inst().getModel().getFontDocument().getFont();
-            glyph = font.getData().getGlyph((char) model.code);
 
-//            background = resources.assets.get("textures/glyph_preview_bg_checker.png");
-//            background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-//            background.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-            init();
+            updateTextureRegion();
         }
 
         @Override
         public float getPrefWidth() {
-            if (glyphRegion == null) return super.getPrefWidth();
+            if (glyphRegion.getTexture() == null) return super.getPrefWidth();
             return GLYPH_SCALE * glyphRegion.getRegionWidth();
         }
 
         @Override
         public float getPrefHeight() {
-            if (glyphRegion == null) return super.getPrefHeight();
+            if (glyphRegion.getTexture() == null) return super.getPrefHeight();
             return GLYPH_SCALE * glyphRegion.getRegionHeight();
         }
 
-        @Override
-        protected void setStage(Stage stage) {
-            super.setStage(stage);
-            if (stage != null) {
-                init();
-            } else {
-                dispose();
-            }
-        }
-
-        private void init() {
-            if (glyphRegion != null) return;
-
-            glyphRegion = Pools.obtain(TextureRegion.class);
-            TextureRegion pageRegion = font.getRegion(glyph.page);
-            glyphRegion.setRegion(pageRegion, glyph.srcX, glyph.srcY, glyph.width, glyph.height);
+        public void updateTextureRegion() {
+            glyphRegion.setTexture(fontDocument.getPages().first().getPageTexture());
+            glyphRegion.setRegion(model.x, model.y, model.width, model.height);
 
             invalidateHierarchy();
-        }
-
-        private void dispose() {
-            if (glyphRegion != null) {
-                Pools.free(glyphRegion);
-                glyphRegion = null;
-            }
         }
 
         @Override
         public void draw(Batch batch, float parentAlpha) {
             batch.setColor(getColor());
-//            batch.draw(background, getX(), getY(), getWidth(), getHeight(), 0, 0, glyphRegion.getRegionWidth()/2f, glyphRegion.getRegionHeight()/2f);
-
-            if (glyphRegion != null) {
+            if (glyphRegion.getTexture() != null) {
                 batch.draw(glyphRegion, getX(), getY(), getWidth(), getHeight());
             }
-        }
-
-        public void mapFromModel() {
-            dispose();
-            init();
         }
     }
 

@@ -49,11 +49,15 @@ class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
             selectedGlyph.y = pixmap.getHeight() - scope.getY() - scope.getHeight() + 1;
             selectedGlyph.width = scope.getWidth();
             selectedGlyph.height = scope.getHeight();
+            selectedGlyph.xoffset = 0;
+            selectedGlyph.yoffset = 10;
+            selectedGlyph.xadvance = selectedGlyph.width-1;
+            App.inst().getModel().getFontDocument().saveGlyphData(selectedGlyph);
 
+            return true;
         } finally {
             pixmap.dispose();
         }
-        return false;
     }
 
     private static boolean isEmpty(Pixmap pixmap, int x, int y) {
@@ -86,12 +90,11 @@ class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
 
         public void processCycle() {
             if (emptySides == 4) {
-                System.out.println("Scope is calculated");
                 return;
             }
 
             if (right - left >= MAX_SIDE || top - bot >= MAX_SIDE) {
-                System.out.println("Scope is calculation stopped due to exceed max size");
+                Gdx.app.error("AdjacentBB", "Scope is calculation stopped due to exceed max size");
                 return;
             }
 
@@ -102,28 +105,24 @@ class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
                     if (hasPixelH(top+1)) {
                         top++;
                         emptySides = 0;
-                        System.out.println("top");
                     } else emptySides++;
                     break;
                 case RIGHT:
                     if (hasPixelV(right+1)) {
                         right++;
                         emptySides = 0;
-                        System.out.println("right");
                     } else emptySides++;
                     break;
                 case BOT:
                     if (hasPixelH(bot-1)) {
                         bot--;
                         emptySides = 0;
-                        System.out.println("bot");
                     } else emptySides++;
                     break;
                 case LEFT:
                     if (hasPixelV(left-1)) {
                         left--;
                         emptySides = 0;
-                        System.out.println("left");
                     } else emptySides++;
                     break;
             }

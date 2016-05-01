@@ -1,4 +1,4 @@
-package com.metaphore.bmfmetaedit.mainscreen.view;
+package com.metaphore.bmfmetaedit.mainscreen.view.glyphgrid;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,43 +11,35 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.crashinvaders.common.eventmanager.EventHandler;
 import com.crashinvaders.common.eventmanager.EventInfo;
-import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
 import com.metaphore.bmfmetaedit.mainscreen.selection.events.GlyphSelectionChangedEvent;
+import com.metaphore.bmfmetaedit.model.FontDocument;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.metaphore.bmfmetaedit.model.events.PageTextureUpdatedEvent;
 
 public class GlyphGrid extends VerticalGroup implements EventHandler {
     private static final Vector2 TMP_VEC2 = new Vector2();
     public static final float SPACE_X = 4f;
 
     private final MainScreenContext ctx;
+    private final FontDocument fontDocument;
     private final ArrayMap<GlyphModel, GlyphItem> index;
 
     private boolean rearrangeRequired = true;
     private ScrollPane parenScrollPane;
 
-    public GlyphGrid(MainScreenContext ctx) {
+    public GlyphGrid(MainScreenContext ctx, FontDocument fontDocument) {
         this.ctx = ctx;
+        this.fontDocument = fontDocument;
         setTransform(false);
 
         // Generate items
-        Array<GlyphModel> glyphs = App.inst().getModel().getFontDocument().getGlyphs();
+        Array<GlyphModel> glyphs = fontDocument.getGlyphs();
         index = new ArrayMap<>(glyphs.size);
         for (int i = 0; i < glyphs.size; i++) {
             GlyphModel model = glyphs.get(i);
             createGlyphItem(model);
-//            GlyphItem glyphItem = new GlyphItem(ctx.getResources(), model);
-//            glyphItem.addListener(new ClickListener() {
-//                @Override
-//                public void clicked(InputEvent event, float x, float y) {
-//                    ctx.getSelectionManager().setSelectedGlyph(model);
-//                }
-//            });
-//            index.put(model, glyphItem);
         }
     }
 
@@ -62,7 +54,8 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
         if (stage != null) {
             ctx.getEvents().addHandler(this,
                     GlyphSelectionChangedEvent.class,
-                    GlyphModelChangedEvent.class
+                    GlyphModelChangedEvent.class,
+                    PageTextureUpdatedEvent.class
             );
         } else {
             ctx.getEvents().removeHandler(this);
@@ -89,6 +82,12 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
                     removeGlyphItem(glyphModel);
                     break;
             }
+
+        } else if (event instanceof PageTextureUpdatedEvent) {
+            // Refresh all glyphs
+            for (int i = 0; i < index.size; i++) {
+                index.getValueAt(i).mapFromModel();
+            }
         }
     }
 
@@ -110,7 +109,7 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
 
 
     private void createGlyphItem(GlyphModel glyphModel) {
-        GlyphItem glyphItem = new GlyphItem(ctx.getResources(), glyphModel);
+        GlyphItem glyphItem = new GlyphItem(ctx.getResources(), fontDocument, glyphModel);
         glyphItem.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

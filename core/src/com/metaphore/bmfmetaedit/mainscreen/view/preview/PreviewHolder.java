@@ -95,7 +95,7 @@ public class PreviewHolder extends WidgetGroup {
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            float scaleFactor = amount > 0 ? 0.9f : 1.1f;
+            float scaleFactor = amount > 0 ? 0.8f : 1.2f;
             target.setScale(target.getScaleX() * scaleFactor);
             return true;
         }
