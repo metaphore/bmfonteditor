@@ -3,10 +3,9 @@ package com.metaphore.bmfmetaedit.mainscreen.view.preview;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.metaphore.bmfmetaedit.common.scene2d.CaptureScrollOnHover;
 import com.metaphore.bmfmetaedit.mainscreen.MainScreenContext;
@@ -88,15 +87,27 @@ public class PreviewHolder extends WidgetGroup {
     }
 
     private static class ScaleInputHandler extends CaptureScrollOnHover {
+        private static final float SCALE_FACTOR = 0.25f;
+
+        private ScaleToAction scaleAction;
 
         public ScaleInputHandler(Actor target) {
             super(target);
+
+            scaleAction = new ScaleToAction();
+            scaleAction.setInterpolation(Interpolation.pow4Out);
+            scaleAction.setDuration(0.25f);
         }
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            float scaleFactor = amount > 0 ? 0.8f : 1.2f;
-            target.setScale(target.getScaleX() * scaleFactor);
+            float scaleFactor = 1f + SCALE_FACTOR*amount;
+
+            target.removeAction(scaleAction);
+            scaleAction.restart();
+            scaleAction.setScale(target.getScaleX() * scaleFactor);
+            target.addAction(scaleAction);
+
             return true;
         }
     }
