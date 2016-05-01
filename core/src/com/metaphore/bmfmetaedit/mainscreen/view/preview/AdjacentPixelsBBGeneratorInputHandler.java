@@ -50,7 +50,7 @@ class AdjacentPixelsBBGeneratorInputHandler extends InputListener {
             selectedGlyph.width = scope.getWidth() + 1;
             selectedGlyph.height = scope.getHeight() + 1;
             selectedGlyph.xoffset = 0;
-            selectedGlyph.yoffset = 10;
+            selectedGlyph.yoffset = -10;
             selectedGlyph.xadvance = selectedGlyph.width-1;
             App.inst().getModel().getFontDocument().saveGlyphData(selectedGlyph);
 
