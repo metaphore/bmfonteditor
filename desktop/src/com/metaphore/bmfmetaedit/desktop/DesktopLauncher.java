@@ -16,6 +16,7 @@ import java.io.File;
 public class DesktopLauncher implements ActionResolver {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "BMFont Editor";
         config.preferencesDirectory = ".bmfontmetaedit/";
         config.width = 1024;
         config.height = 600;
