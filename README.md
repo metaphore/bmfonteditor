@@ -13,7 +13,7 @@ My searches brought me to conclusion that this world totaly in lack of such a th
 
 ### Early preview version
 
-Early preview asseble available from releases page.
+Early preview asseble available from [releases page](https://github.com/Metaphore/bmfonteditor/releases).
 
 This is very raw version that can work only with predefined bitmap font to let you play with it and understand how it works.
 
