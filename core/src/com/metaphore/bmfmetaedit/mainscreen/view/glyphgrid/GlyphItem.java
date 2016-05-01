@@ -25,6 +25,7 @@ class GlyphItem extends Table {
 
     private final Label lblHex;
     private final Label lblDec;
+    private final Label lblChar;
     private final GlyphPreview glyphPreview;
 
     private boolean selected;
@@ -36,7 +37,8 @@ class GlyphItem extends Table {
         setTouchable(Touchable.enabled);
 
         lblHex = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
-        lblDec = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
+        lblChar = new Label("", new Label.LabelStyle(resources.font, Color.WHITE));
+        lblDec = new Label("", new Label.LabelStyle(resources.font, Color.LIGHT_GRAY));
         glyphPreview = new GlyphPreview(resources, fontDocument, model);
         Container previewContainer = new Container<>(glyphPreview);
         previewContainer.setBackground(new NinePatchDrawable(resources.atlas.createPatch("glyph_preview_border")));
@@ -44,11 +46,12 @@ class GlyphItem extends Table {
 
         pad(8f);
         defaults().center();
-        add(previewContainer);
+        add(previewContainer).colspan(2);
         row().padTop(2f);
-        add(lblHex);
+        add(lblHex).colspan(2);
         row();
-        add(lblDec);
+        add(lblChar).colspan(2);
+//        add(lblDec);
 
         mapFromModel();
     }
@@ -56,6 +59,7 @@ class GlyphItem extends Table {
     public void mapFromModel() {
         lblHex.setText(model.hex);
         lblDec.setText("#"+model.code);
+        lblChar.setText((char)model.code + "");
         glyphPreview.updateTextureRegion();
     }
 

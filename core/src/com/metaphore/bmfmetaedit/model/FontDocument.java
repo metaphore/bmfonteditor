@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.crashinvaders.common.eventmanager.EventManager;
 import com.metaphore.bmfmetaedit.model.events.GlyphModelChangedEvent;
-import org.apache.commons.io.monitor.FileAlterationObserver;
 
 import java.io.File;
 

@@ -19,6 +19,11 @@ class InternalDirFileHandleResolver implements FileHandleResolver {
 
     @Override
     public FileHandle resolve(String fileName) {
+        if (fileName.startsWith("res")) {
+            FileHandle file = Gdx.files.internal(fileName);
+            if (file.exists()) return file;
+        }
+
         return Gdx.files.internal(rootDir.path() + File.separator + fileName);
     }
 

@@ -71,7 +71,7 @@ public class EditBoxContainer extends Container implements EventHandler {
     private class Content extends Table {
         private static final float SIDE_PAD_H = 16f;
         private static final float SIDE_PAD_V = 8f;
-        public static final float PAD_LBL = 4f;
+        public static final float PAD_LBL = 8f;
         public static final float SPACE_COL = 16f;
         public static final float SPACE_ROW = 8f;
 

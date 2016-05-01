@@ -22,7 +22,8 @@ public class MainResources {
     public MainResources(AssetManager assets) {
         this.assets = assets;
         atlas = assets.get("atlases/main_screen.atlas");
-        font = new BitmapFont();
+//        font = new BitmapFont();
+        font = assets.get("fonts/opensans15.fnt");
         shapeRenderer = new ShapeRenderer();
         styles = new Styles();
 
@@ -36,7 +37,7 @@ public class MainResources {
     }
 
     public void dispose() {
-        font.dispose();
+//        font.dispose();
         whitePixel.dispose();
         shapeRenderer.dispose();
     }
