@@ -1,7 +1,7 @@
 info face="nokia8" size=8 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=2 padding=0,0,0,0 spacing=0,0
 common lineHeight=12 base=9 scaleW=512 scaleH=512 pages=1 packed=0 alphaChnl=0 redChnl=0 greenChnl=0 blueChnl=0
 page id=0 file="nokia8.png"
-chars count=117
+chars count=118
 char id=32    x=0    y=0    width=0    height=0    xoffset=0    yoffset=9    xadvance=3    page=0    chnl=0
 char id=33    x=121  y=0    width=4    height=9    xoffset=0    yoffset=1    xadvance=3    page=0    chnl=0
 char id=34    x=77   y=10   width=5    height=4    xoffset=0    yoffset=1    xadvance=4    page=0    chnl=0
@@ -98,7 +98,8 @@ char id=124   x=7    y=0    width=4    height=10   xoffset=0    yoffset=1    xad
 char id=125   x=11   y=0    width=5    height=10   xoffset=0    yoffset=1    xadvance=4    page=0    chnl=0
 char id=126   x=59   y=10   width=7    height=4    xoffset=0    yoffset=1    xadvance=6    page=0    chnl=0
 char id=768   x=96   y=10   width=8    height=9    xoffset=0    yoffset=1    xadvance=8    page=0    chnl=0
-char id=1040  x=0    y=39   width=6    height=8    xoffset=0    yoffset=-18  xadvance=5    page=0    chnl=0
+char id=1040  x=0    y=38   width=7    height=9    xoffset=0    yoffset=-19  xadvance=6    page=0    chnl=0
+char id=1041  x=7    y=38   width=7    height=9    xoffset=0    yoffset=-19  xadvance=6    page=0    chnl=0
 char id=2048  x=484  y=11   width=5    height=8    xoffset=0    yoffset=2    xadvance=5    page=0    chnl=0
 char id=2049  x=490  y=11   width=8    height=8    xoffset=0    yoffset=2    xadvance=8    page=0    chnl=0
 char id=2050  x=499  y=11   width=11   height=8    xoffset=0    yoffset=2    xadvance=11   page=0    chnl=0

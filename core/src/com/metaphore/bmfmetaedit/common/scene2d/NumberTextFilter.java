@@ -21,7 +21,7 @@ public class NumberTextFilter implements TextField.TextFieldFilter {
         availableChars.addAll(numbers);
 
         String text = textField.getText();
-        if (text != null) {
+        if (text != null && text.length() != 0) {
             int dotIndex = text.indexOf('.');
             if (allowFloat && dotIndex==-1) {
                 availableChars.add('.');
@@ -38,6 +38,8 @@ public class NumberTextFilter implements TextField.TextFieldFilter {
                     availableChars.removeAll(numbers);
                 }
             }
+        } else {
+            availableChars.add('-');
         }
 
         return availableChars.contains(c);

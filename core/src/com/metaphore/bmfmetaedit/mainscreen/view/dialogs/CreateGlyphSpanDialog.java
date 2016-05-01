@@ -24,14 +24,13 @@ public class CreateGlyphSpanDialog extends BaseDialog<CreateGlyphSpanDialog.Resu
         edtCodeFirst = new NumericField(resources.styles.tfsField);
         edtCodeFirst.setAlignment(Align.right);
         edtCodeFirst.setInt(0);
-        defaultFocus(edtCodeFirst);
         lblHexFirst = new Label("", new Label.LabelStyle(resources.font, Color.LIGHT_GRAY));
+        defaultFocus(edtCodeFirst);
         updateHexValue(edtCodeFirst, lblHexFirst);
 
         edtCodeLast = new NumericField(resources.styles.tfsField);
         edtCodeLast.setAlignment(Align.right);
         edtCodeLast.setInt(0);
-        defaultFocus(edtCodeLast);
         lblHexLast = new Label("", new Label.LabelStyle(resources.font, Color.LIGHT_GRAY));
         updateHexValue(edtCodeLast, lblHexLast);
 

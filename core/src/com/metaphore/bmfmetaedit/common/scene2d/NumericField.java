@@ -1,6 +1,9 @@
 package com.metaphore.bmfmetaedit.common.scene2d;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 
@@ -19,6 +22,17 @@ public class NumericField extends TextField {
                 if (actor == NumericField.this) {
                     selectAll();
                 }
+            }
+        });
+
+        addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    getStage().setKeyboardFocus(null);
+                    return true;
+                }
+                return super.keyDown(event, keycode);
             }
         });
     }

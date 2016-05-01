@@ -3,12 +3,11 @@ package com.metaphore.bmfmetaedit.mainscreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.actionresolver.FileChooserParams;
 import com.metaphore.bmfmetaedit.mainscreen.view.dialogs.CreateGlyphDialog;
 import com.metaphore.bmfmetaedit.mainscreen.view.dialogs.CreateGlyphSpanDialog;
+import com.metaphore.bmfmetaedit.mainscreen.view.dialogs.FontTestDialog;
 import com.metaphore.bmfmetaedit.mainscreen.view.dialogs.ReadKeyCharDialog;
 import com.metaphore.bmfmetaedit.model.GlyphModel;
 import com.metaphore.bmfmetaedit.model.Model;
@@ -96,6 +95,15 @@ public class KeyBinds extends InputAdapter {
                     return true;
                 }
                 break;
+            }
+            case Keys.T: {
+                if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+                    // Test current font
+
+                    new FontTestDialog(ctx.getResources())
+                            .show(ctx.getStage());
+                }
+
             }
         }
         return super.keyDown(keycode);

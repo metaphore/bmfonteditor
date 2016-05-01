@@ -88,7 +88,7 @@ public abstract class BaseDialog<T> extends Dialog {
     }
 
     @Override
-    protected final void result(Object object) {
+    protected void result(Object object) {
         // Treat null as cancel
         if (!allowNullResult && object == null) return;
 
