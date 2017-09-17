@@ -45,12 +45,10 @@ public class KeyBinds extends InputAdapter {
                 if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
                     // Create new glyph
 
-                    new CreateGlyphDialog(ctx.getResources())
-                            .onResult(r -> {
-                                GlyphModel glyph = model.getFontDocument().createGlyph(r.code);
-                                ctx.getSelectionManager().setSelectedGlyph(glyph);
-                            })
-                            .show(ctx.getStage());
+                    new CreateGlyphDialog(ctx.getResources()).onResult(r -> {
+                        GlyphModel glyph = model.getFontDocument().createGlyph(r.code);
+                        ctx.getSelectionManager().setSelectedGlyph(glyph);
+                    }).show(ctx.getStage());
                     return true;
                 }
                 break;

@@ -1,5 +1,6 @@
 package com.metaphore.bmfmetaedit.mainscreen.view.glyphgrid;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -70,7 +71,9 @@ public class GlyphGrid extends VerticalGroup implements EventHandler {
     public void handle(EventInfo event) {
         if (event instanceof GlyphSelectionChangedEvent) {
             GlyphSelectionChangedEvent e = (GlyphSelectionChangedEvent) event;
-            updateSelection(e.getSelectedGlyph());
+
+            Gdx.app.postRunnable(() -> updateSelection(e.getSelectedGlyph()));
+
 
         } else if (event instanceof GlyphModelChangedEvent) {
             GlyphModelChangedEvent e = (GlyphModelChangedEvent) event;

@@ -27,6 +27,7 @@ public class FontTestDialog extends BaseDialog {
         BitmapFont.BitmapFontData fontData = fontDocument.getFont().getData();
         testFont = new BitmapFont(fontData, new TextureRegion(fontDocument.getPages().first().getPageTexture()), true);
         testFont.getData().markupEnabled = true;
+        testFont.getData().scale(2f);
 
         TextField.TextFieldStyle tfStyle =  new TextField.TextFieldStyle(resources.styles.tfsField);
         tfStyle.font = testFont;

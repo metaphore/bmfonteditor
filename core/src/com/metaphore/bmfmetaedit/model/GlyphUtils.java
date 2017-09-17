@@ -1,8 +1,12 @@
 package com.metaphore.bmfmetaedit.model;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.CharArray;
 
 public class GlyphUtils {
+    public static final CharArray hexChars = CharArray.with(
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F');
 
     public static GlyphModel toGlyphModel(BitmapFont font, GlyphModel glyphModel, BitmapFont.Glyph glyph) {
         glyphModel.name = "#" + glyph.id;

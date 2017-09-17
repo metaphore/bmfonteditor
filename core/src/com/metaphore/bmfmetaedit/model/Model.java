@@ -20,7 +20,10 @@ public class Model {
     }
 
     public void initTestDocument() {
-        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.internal("test/nokia8.fnt").file());
+//        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.internal("test/nokia8.fnt").file());
+//        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/flippyhex/assets/res/fonts/fivenok.fnt").file());
+//        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/flippyhex/assets/res/fonts/saint11.fnt").file());
+        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/getreact/assets/res/fonts/nokia8.fnt").file());
         fontDocument = new FontDocument(eventManager, font);
     }
 
@@ -71,7 +74,7 @@ public class Model {
         String fileName = file.getAbsolutePath();
 
         int i = fileName.lastIndexOf('.');
-        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('/'));
 
         if (i > p) {
             extension = fileName.substring(i);

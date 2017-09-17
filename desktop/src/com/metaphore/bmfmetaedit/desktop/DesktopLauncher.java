@@ -1,5 +1,6 @@
 package com.metaphore.bmfmetaedit.desktop;
 
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -17,6 +18,9 @@ public class DesktopLauncher implements ActionResolver {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "BMFont Editor";
+        config.addIcon("icon128.png", Files.FileType.Classpath);
+        config.addIcon("icon32.png", Files.FileType.Classpath);
+        config.addIcon("icon16.png", Files.FileType.Classpath);
         config.preferencesDirectory = ".bmfontmetaedit/";
         config.width = 1024;
         config.height = 600;
