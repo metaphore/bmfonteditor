@@ -128,7 +128,7 @@ public class App extends StackScreenManager implements LoadScreen.Listener {
         return pauseManager;
     }
 
-    public void fileChoose(FileChooserParams params, FileChooserListener listener) {
+    public void showFileChooser(FileChooserParams params, FileChooserListener listener) {
         GlobalSuspendEvent.dispatchHold();
         actionResolver.fileChooser(params, (success, fileHandle) -> {
             GlobalSuspendEvent.dispatchRelease();

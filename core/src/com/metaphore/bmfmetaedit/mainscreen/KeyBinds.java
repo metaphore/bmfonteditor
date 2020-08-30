@@ -70,9 +70,14 @@ public class KeyBinds extends InputAdapter {
                     // Save current font
 
                     File fontFile = model.getFontDocument().getFont().getData().fontFile.file();
-                    App.inst().fileChoose(new FileChooserParams().save().title("Save as").extensions("fnt").rootDir(fontFile), (success, fileHandle) -> {
-                        if (success) model.saveDocument(fileHandle);
-                    });
+                    App.inst().showFileChooser(new FileChooserParams()
+                                    .save()
+                                    .title("Save as")
+                                    .extensions("fnt")
+                                    .rootDir(fontFile),
+                            (success, fileHandle) -> {
+                                if (success) model.saveDocument(fileHandle);
+                            });
                     return true;
                 }
                 break;
