@@ -15,8 +15,6 @@ project.ext.resourceDirs = files(
 dependencies {
     runtime files(project.resourceDirs)
     implementation project(":core")
-//    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-//    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
