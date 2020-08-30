@@ -8,13 +8,11 @@ buildscript {
 }
 
 allprojects {
-    apply plugin: "eclipse"
     apply plugin: "idea"
 
     version = '1.0'
     ext {
         appName = "bmfonteditor"
-        gdxVersion = '1.9.2'
     }
 
     repositories {
@@ -22,30 +20,4 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-}
-
-project(":desktop") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    }
-}
-
-project(":core") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile 'commons-io:commons-io:2.5'
-    }
-}
-
-tasks.eclipse.doLast {
-    delete ".project"
 }

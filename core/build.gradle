@@ -1,11 +1,13 @@
-apply plugin: "java"
+apply plugin: 'java-library'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 8.0
+targetCompatibility = 8.0
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = ['src/']
 
-
-eclipse.project {
-    name = appName + "-core"
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    api "commons-io:commons-io:$appacheCommons"
 }

@@ -2,8 +2,8 @@ package com.metaphore.bmfmetaedit.desktop;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.metaphore.bmfmetaedit.App;
 import com.metaphore.bmfmetaedit.actionresolver.ActionResolver;
 import com.metaphore.bmfmetaedit.actionresolver.FileChooserListener;
@@ -16,16 +16,13 @@ import java.io.File;
 
 public class DesktopLauncher implements ActionResolver {
     public static void main(String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = "BMFont Editor";
-        config.addIcon("icon128.png", Files.FileType.Classpath);
-        config.addIcon("icon32.png", Files.FileType.Classpath);
-        config.addIcon("icon16.png", Files.FileType.Classpath);
-        config.preferencesDirectory = ".bmfontmetaedit/";
-        config.width = 1024;
-        config.height = 600;
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("BMFont Editor");
+        config.setWindowIcon(Files.FileType.Classpath, "icon128.png", "icon32.png", "icon16.png");
+        config.setPreferencesConfig(".prefs/bmfontmetaedit", Files.FileType.External);
+        config.setWindowedMode(1024, 600);
 
-        new LwjglApplication(new App(new DesktopLauncher()), config);
+        new Lwjgl3Application(new App(new DesktopLauncher()), config);
     }
 
     @Override
