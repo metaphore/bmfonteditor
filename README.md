@@ -1,6 +1,6 @@
 # BMFont Editor
 
-Small tool to add/edit glyphs to bitmap fonts (angel code format).
+A small tool to modify bitmap fonts glyphs ([angel code format](https://www.angelcode.com/products/bmfont)).
 
 <img src="http://i.imgur.com/SN9ZNXR.png" width="512">
 
