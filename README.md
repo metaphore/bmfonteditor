@@ -1,40 +1,33 @@
 # BMFont Editor
 
-Small tool to add/edit glyphs in bitmap font (angel code format).
-
-
-I spent few days all over the net trying to find a tool that will help me extend already generated bitmap font with a new characters.
-Of course I could do that in text markup by hand, but when you need to add ~100 glyphs, correct their params and see if they look fine in a text line - it's a suicide.
-My searches brought me to the conclusion that this world in total lack of such a thing and I decided to write it by my own.
-
-## Still in development
+Small tool to add/edit glyphs to bitmap fonts (angel code format).
 
 <img src="http://i.imgur.com/SN9ZNXR.png" width="512">
 
-### Early preview version
+# Demo build
 
-Early preview asseble available from [releases page](https://github.com/Metaphore/bmfonteditor/releases).
+An early preview is available from the [releases page](https://github.com/Metaphore/bmfonteditor/releases).
 
-This is very raw version that can work only with predefined bitmap font to let you play with it and understand how it works.
+This is a very raw version that can work only with the predefined bitmap font to let you play with it and understand how it works.
 
-It has find BB algorithm, that helps to define base character params. It works like this:
+It has a simple _bounding box discovery_ algorithm, that helps to define base character params (like size and position). It works like this:
 
 1. Select any character
-2. Click on any non empty pixel in right pane
+2. Click on any non empty pixel on the right pane
 3. Program will find BB for that glyph
 
 #### Hot keys:
 
-`CTRL+N` create new glyph
+`CTRL+N` create a new glyph
 
-`CTRL+SHIFT+N` create span of new glyphs
+`CTRL+SHIFT+N` create a span of new glyphs
 
-`CTRL+DEL` delete selected glyph
+`CTRL+DEL` delete the selected glyph
 
-`CTRL+F` find glyph by pressing approapriate key
+`CTRL+F` find a glyph by pressing they related key-code
 
-`CTRL+T` open preview window to try current font
+`CTRL+T` open a preview window to try the current font
 
-`CTRL+SPACE` save changes you made within bottom input fields
+`CTRL+SPACE` save changes you made for the glyph (within edit panel at the bottom)
 
-`CTRL+S` save current document in angel code font format
+`CTRL+S` save the current document in angel code font format
