@@ -13,8 +13,9 @@ import java.io.File;
 
 public class FontDocument {
     public static final int CHUNK_SIZE = 512;
-    private final BitmapFont font;
     private final EventManager eventManager;
+    private final BitmapFont font;
+
     private final Array<GlyphModel> glyphs;
 
     private final Array<PageModel> pages;

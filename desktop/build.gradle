@@ -6,6 +6,7 @@ compileJava.options.incremental = true
 
 sourceSets.main.java.srcDirs = ['src/']
 sourceSets.main.resources.srcDirs += ['resources/']
+sourceSets.main.resources.srcDirs += [rootProject.file('assets').path]
 
 project.ext.mainClassName = "com.metaphore.bmfmetaedit.desktop.DesktopLauncher"
 project.ext.resourceDirs = files(
@@ -23,8 +24,9 @@ task run(dependsOn: classes, type: JavaExec) {
     main = project.mainClassName
     classpath(sourceSets.main.runtimeClasspath)
     classpath(project.resourceDirs)
+    workingDir = rootProject.file('assets').path
     standardInput = System.in
-    ignoreExitValue = true
+    setIgnoreExitValue(true)
 
     if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_MAC)) {
         jvmArgs '-XstartOnFirstThread'

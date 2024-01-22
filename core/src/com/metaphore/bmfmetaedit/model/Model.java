@@ -3,6 +3,7 @@ package com.metaphore.bmfmetaedit.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.bmfont.BitmapFontWriter;
 import com.crashinvaders.common.eventmanager.EventManager;
 
@@ -20,10 +21,18 @@ public class Model {
     }
 
     public void initTestDocument() {
-        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.internal("test/nokia8.fnt").file());
+        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.internal("test/pixola-cursiva-shadow.fnt").file());
+//        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("test/nokia8.fnt").file());
 //        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/flippyhex/assets/res/fonts/fivenok.fnt").file());
 //        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/flippyhex/assets/res/fonts/saint11.fnt").file());
 //        BitmapFont font = FontDocument.loadBitmapFont(Gdx.files.absolute("C:/Projects/libgdx/getreact/assets/res/fonts/nokia8.fnt").file());
+
+        // Enable missing glyph.
+        BitmapFont.Glyph missingGlyph = font.getData().getGlyph('�');
+        if (missingGlyph != null) {
+            font.getData().missingGlyph = missingGlyph;
+        }
+
         fontDocument = new FontDocument(eventManager, font);
     }
 
@@ -35,8 +44,12 @@ public class Model {
         if (fontDocument == null) return;
 
         String fontName = fileHandle.nameWithoutExtension();
-        BitmapFont.BitmapFontData fontData = fontDocument.getFont().getData();
+        BitmapFont font = fontDocument.getFont();
+        TextureRegion pageRegion = font.getRegion();
+        BitmapFont.BitmapFontData fontData = font.getData();
         String[] imagePaths = new String [fontData.imagePaths.length];
+
+        fontData.setScale(1f);
 
         // Copy page textures
         {
@@ -58,9 +71,10 @@ public class Model {
 
         //TODO correct font info
         BitmapFontWriter.FontInfo fontInfo = new BitmapFontWriter.FontInfo(fontName, 8);
-        BitmapFontWriter.writeFont(fontData, imagePaths, fileHandle, fontInfo, 512, 512);
+        BitmapFontWriter.writeFont(fontData, imagePaths, fileHandle, fontInfo,
+                pageRegion.getRegionWidth(), pageRegion.getRegionHeight());
 
-        Gdx.app.log("Model", "Font has been saved!");
+        Gdx.app.log("Model", "Font \"" + fontName+ "\" has been saved!");
     }
 
     public void dispose() {
