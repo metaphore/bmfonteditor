@@ -19,7 +19,7 @@ import com.metaphore.bmfmetaedit.mainscreen.view.editbox.BaseDialog;
 import com.metaphore.bmfmetaedit.model.FontDocument;
 
 public class FontTestDialog extends BaseDialog {
-    private final static float FONT_SCALE_FACTOR = 1.1f;
+    private final static float FONT_SCALE_FACTOR = 1.2f;
 
     private static String lastText = "";
     private static float lastFontScale = 2f;
